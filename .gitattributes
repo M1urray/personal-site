@@ -1,0 +1,18 @@
+# Normalise line endings to LF in the repository (matches Prettier).
+* text=auto eol=lf
+
+# Binary assets — never touch these.
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+
+# Generated / vendored — keep out of language stats and diffs.
+pnpm-lock.yaml linguist-generated=true
+drizzle/** linguist-generated=true

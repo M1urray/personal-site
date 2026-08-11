@@ -1,0 +1,39 @@
+---
+title: "Idempotent Upserts and the Number Series Trap"
+description: "Why retrying a Business Central write can silently burn a number series, and the upsert pattern that makes AL codeunits safe to call twice."
+date: "2026-07-28"
+category: "business-central"
+published: true
+author: "Robert Kamau Njonjo"
+---
+
+> **TODO: draft.** This post is a working outline. The headings below capture the
+> intended arc; the prose under each is not yet written.
+
+## The problem
+
+TODO: draft — a network retry, a timeout, or an at-least-once queue delivers the
+same request twice, and the second write consumes another number-series entry.
+
+## Why the number series is the trap
+
+TODO: draft — number series advance as a side effect of insert, so naïve
+retry-on-failure creates gaps or duplicates.
+
+```json title="request.json"
+{
+  "comment": "TODO: draft — a representative idempotent request payload."
+}
+```
+
+## The upsert pattern
+
+TODO: draft. Cover:
+
+- a caller-supplied idempotency key
+- looking up the existing record before inserting
+- making the AL codeunit safe to call twice
+
+## What to watch for in production
+
+TODO: draft — concurrency, locking, and how this interacts with posting routines.

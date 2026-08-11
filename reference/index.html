@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robert Kamau Njonjo — Business Central Integration Engineer</title>
+<meta name="description" content="Software engineer specialising in Microsoft Dynamics 365 Business Central integration. AL extensions, OData and SOAP layers, gateway architectures and ERP-connected portals for government and enterprise.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1017;
+  --ink-2:#111A24;
+  --rule:#1E2C3A;
+  --rule-hi:#2C3E50;
+  --steel:#6B8299;
+  --paper:#E8EEF3;
+  --signal:#F0A63C;
+  --ok:#4FB89A;
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --gut:clamp(20px,5vw,64px);
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--body);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(var(--rule) 1px,transparent 1px),
+    linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:88px 88px;
+  background-position:-1px -1px;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 90% 60% at 50% 0%,transparent 20%,var(--ink) 78%);
+}
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+/* ---------- utility type ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  color:var(--signal);text-transform:lowercase;display:flex;align-items:center;gap:10px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule-hi)}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--steel)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:40;background:rgba(10,16,23,.86);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:14px var(--gut);
+  display:flex;align-items:center;justify-content:space-between;gap:20px}
+.nav-id{font-family:var(--mono);font-size:12.5px;color:var(--paper);letter-spacing:.04em}
+.nav-id b{color:var(--signal);font-weight:500}
+.nav-links{display:flex;gap:22px;list-style:none;margin:0;padding:0}
+.nav-links a{
+  font-family:var(--mono);font-size:12.5px;color:var(--steel);
+  text-decoration:none;transition:color .18s;
+}
+.nav-links a:hover{color:var(--paper)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(52px,9vw,104px) 0 0}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:clamp(24px,5vw,60px);align-items:start}
+.status{
+  display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);
+  font-size:12px;color:var(--steel);letter-spacing:.08em;margin-bottom:26px;
+}
+.dot{width:7px;height:7px;background:var(--ok);border-radius:50%;
+  box-shadow:0 0 0 3px rgba(79,184,154,.16);animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.42}}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(40px,8.2vw,88px);line-height:.94;letter-spacing:-.03em;
+  margin:0 0 22px;
+}
+h1 .l2{display:block;color:var(--steel)}
+.lede{
+  font-size:clamp(17px,2.1vw,21px);line-height:1.5;max-width:29ch;
+  margin:0 0 12px;font-weight:400;
+}
+.lede em{font-style:normal;color:var(--signal)}
+.sub{color:var(--steel);max-width:46ch;margin:0 0 32px;font-size:15.5px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.btn{
+  font-family:var(--mono);font-size:13px;letter-spacing:.03em;text-decoration:none;
+  padding:12px 20px;border:1px solid var(--rule-hi);color:var(--paper);
+  transition:border-color .18s,background .18s,color .18s;
+}
+.btn:hover{border-color:var(--signal);color:var(--signal)}
+.btn-solid{background:var(--signal);border-color:var(--signal);color:#0A1017;font-weight:500}
+.btn-solid:hover{background:#ffbc5c;border-color:#ffbc5c;color:#0A1017}
+
+/* portrait */
+.portrait{
+  width:clamp(132px,17vw,196px);aspect-ratio:1/1;position:relative;flex:none;
+  border:1px solid var(--rule-hi);background:var(--ink-2);overflow:hidden;
+}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.06) brightness(.94)}
+.portrait::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(240,166,60,.16),rgba(10,16,23,.5));
+  mix-blend-mode:overlay;
+}
+.portrait-ph{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-.02em;
+  color:var(--rule-hi);background:
+    repeating-linear-gradient(45deg,var(--ink-2) 0 8px,#0d1620 8px 16px);
+}
+.portrait-cap{font-family:var(--mono);font-size:10.5px;color:var(--steel);
+  letter-spacing:.08em;margin-top:9px;text-align:right}
+@media(max-width:640px){
+  .hero-grid{grid-template-columns:1fr}
+  .portrait{order:-1}
+  .portrait-cap{text-align:left}
+}
+
+/* ---------- request trace (signature) ---------- */
+.trace{
+  margin-top:clamp(52px,8vw,88px);border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);padding:30px 0 26px;
+}
+.trace-head{display:flex;justify-content:space-between;align-items:baseline;
+  gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.trace-title{font-family:var(--mono);font-size:12px;color:var(--steel);letter-spacing:.09em}
+.trace-title b{color:var(--paper);font-weight:400}
+.trace-code{font-family:var(--mono);font-size:12px;color:var(--ok)}
+.flow{display:flex;align-items:stretch;gap:0}
+.node{flex:1 1 0;min-width:0;position:relative;padding-right:12px}
+.node:last-child{padding-right:0;flex:0 0 auto}
+.node-mark{
+  width:11px;height:11px;border:1px solid var(--rule-hi);background:var(--ink);
+  position:relative;margin-bottom:14px;transition:border-color .3s,background .3s;
+}
+.node.on .node-mark{border-color:var(--signal);background:var(--signal)}
+.node-label{font-family:var(--display);font-weight:600;font-size:13.5px;
+  letter-spacing:-.005em;line-height:1.3;transition:color .3s;color:var(--steel)}
+.node.on .node-label{color:var(--paper)}
+.node-meta{font-family:var(--mono);font-size:10.5px;color:var(--rule-hi);
+  letter-spacing:.06em;margin-top:5px;transition:color .3s}
+.node.on .node-meta{color:var(--signal)}
+.wire{
+  position:absolute;left:11px;right:12px;top:5px;height:1px;background:var(--rule-hi);
+  overflow:hidden;
+}
+.wire::after{
+  content:"";position:absolute;top:0;left:0;width:34%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--signal),transparent);
+  transform:translateX(-120%);
+}
+.node.fire .wire::after{animation:send 1.05s cubic-bezier(.4,0,.5,1) forwards}
+@keyframes send{to{transform:translateX(380%)}}
+@media(max-width:760px){
+  .flow{flex-direction:column;gap:0}
+  .node{padding-right:0;padding-bottom:26px;padding-left:26px}
+  .node:last-child{padding-bottom:0}
+  .node-mark{position:absolute;left:0;top:2px;margin:0}
+  .wire{left:5px;right:auto;top:13px;bottom:2px;width:1px;height:auto}
+  .wire::after{width:1px;height:34%;left:0;top:0;
+    background:linear-gradient(180deg,transparent,var(--signal),transparent);
+    transform:translateY(-120%)}
+  .node.fire .wire::after{animation:send-v 1.05s cubic-bezier(.4,0,.5,1) forwards}
+  @keyframes send-v{to{transform:translateY(380%)}}
+}
+@media(prefers-reduced-motion:reduce){
+  .node.fire .wire::after{animation:none;transform:none;opacity:.5;width:100%}
+  .dot{animation:none}
+  .node{opacity:1}
+  .node .node-mark{border-color:var(--signal)}
+}
+
+/* ---------- sections ---------- */
+section{padding:clamp(60px,9vw,110px) 0 0}
+.sec-head{margin-bottom:36px}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.2vw,40px);
+  letter-spacing:-.025em;margin:16px 0 0;line-height:1.08}
+.sec-note{color:var(--steel);max-width:60ch;margin:14px 0 0;font-size:15.5px}
+
+/* profile + spec sheet */
+.profile-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,6vw,72px)}
+@media(max-width:860px){.profile-grid{grid-template-columns:1fr}}
+.profile-body p{margin:0 0 18px;font-size:16.5px}
+.profile-body p:last-child{margin-bottom:0}
+.spec{border-top:1px solid var(--rule)}
+.spec-row{display:grid;grid-template-columns:132px 1fr;gap:18px;
+  padding:14px 0;border-bottom:1px solid var(--rule)}
+.spec-k{font-family:var(--mono);font-size:11px;color:var(--signal);
+  letter-spacing:.07em;text-transform:uppercase;padding-top:3px}
+.spec-v{font-size:14.5px;color:var(--paper);line-height:1.6}
+@media(max-width:520px){.spec-row{grid-template-columns:1fr;gap:5px}}
+
+/* experience */
+.roles{border-left:1px solid var(--rule);margin-left:5px}
+.role{position:relative;padding:0 0 clamp(38px,5vw,54px) clamp(26px,4vw,44px)}
+.role:last-child{padding-bottom:0}
+.role::before{
+  content:"";position:absolute;left:-5.5px;top:7px;width:10px;height:10px;
+  background:var(--ink);border:1px solid var(--rule-hi);
+}
+.role.now::before{border-color:var(--signal);background:var(--signal)}
+.role-top{display:flex;justify-content:space-between;gap:16px;
+  align-items:baseline;flex-wrap:wrap;margin-bottom:4px}
+.role-org{font-family:var(--display);font-weight:800;font-size:clamp(18px,2.6vw,23px);
+  letter-spacing:-.02em;margin:0}
+.role-when{font-family:var(--mono);font-size:11.5px;color:var(--steel);
+  letter-spacing:.05em;white-space:nowrap}
+.role-title{font-family:var(--mono);font-size:12.5px;color:var(--signal);
+  letter-spacing:.04em;margin:0 0 16px}
+.role ul{list-style:none;margin:0;padding:0}
+.role li{position:relative;padding-left:19px;margin-bottom:10px;
+  font-size:15px;color:#C4D2DE;line-height:1.62}
+.role li::before{content:"";position:absolute;left:0;top:10px;
+  width:8px;height:1px;background:var(--rule-hi)}
+.role li strong{color:var(--paper);font-weight:500}
+.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+  color:var(--steel);border:1px solid var(--rule);padding:4px 9px}
+
+/* work */
+.case{border:1px solid var(--rule-hi);background:var(--ink-2);
+  padding:clamp(24px,4vw,40px);margin-bottom:20px}
+.case-tag{font-family:var(--mono);font-size:11px;color:var(--signal);
+  letter-spacing:.09em;margin-bottom:14px}
+.case h3{font-family:var(--display);font-weight:800;
+  font-size:clamp(21px,3.4vw,30px);letter-spacing:-.025em;margin:0 0 14px;line-height:1.14}
+.case p{margin:0 0 20px;color:#C4D2DE;max-width:66ch;font-size:15.5px}
+.live{
+  display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);
+  font-size:12.5px;color:var(--ok);text-decoration:none;border:1px solid var(--rule-hi);
+  padding:10px 16px;transition:border-color .18s;
+}
+.live:hover{border-color:var(--ok)}
+.live .dot{width:6px;height:6px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:720px){.mini-grid{grid-template-columns:1fr}}
+.mini{border-top:1px solid var(--rule-hi);padding-top:18px}
+.mini h4{font-family:var(--display);font-weight:600;font-size:16px;
+  margin:0 0 8px;letter-spacing:-.01em}
+.mini p{margin:0;color:var(--steel);font-size:14.5px}
+
+/* writing */
+.writing{border:1px dashed var(--rule-hi);padding:clamp(24px,4vw,36px)}
+.writing h3{font-family:var(--display);font-weight:800;font-size:clamp(20px,3vw,26px);
+  letter-spacing:-.02em;margin:0 0 12px}
+.writing p{color:var(--steel);max-width:62ch;margin:0 0 18px;font-size:15.5px}
+.topics{display:flex;flex-wrap:wrap;gap:8px}
+.topic{font-family:var(--mono);font-size:11px;color:var(--steel);
+  border-left:1px solid var(--signal);padding:3px 0 3px 10px}
+
+/* contact */
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin-top:8px}
+@media(max-width:640px){.contact-grid{grid-template-columns:1fr}}
+.ct{background:var(--ink);padding:22px 24px;text-decoration:none;display:block;
+  transition:background .18s}
+.ct:hover{background:var(--ink-2)}
+.ct-k{font-family:var(--mono);font-size:10.5px;color:var(--signal);
+  letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px}
+.ct-v{font-size:15.5px;color:var(--paper);word-break:break-word}
+
+footer{margin-top:clamp(60px,8vw,100px);border-top:1px solid var(--rule);
+  padding:24px 0 40px}
+.foot-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-in span{font-family:var(--mono);font-size:11.5px;color:var(--rule-hi);letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="nav-id">R.<b>NJONJO</b></div>
+    <ul class="nav-links">
+      <li><a href="#profile">/profile</a></li>
+      <li><a href="#experience">/experience</a></li>
+      <li><a href="#work">/work</a></li>
+      <li><a href="#writing">/writing</a></li>
+      <li><a href="#contact">/contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="status"><span class="dot"></span>NAIROBI, KENYA — OPEN TO WORK</div>
+        <h1>Robert Kamau<span class="l2">Njonjo</span></h1>
+        <p class="lede">I connect <em>Microsoft Dynamics&nbsp;365 Business Central</em> to everything else.</p>
+        <p class="sub">Four years building the APIs, gateways and portals that let organisations
+          actually use the data locked inside their ERP — for government, public sector
+          and enterprise clients across Kenya.</p>
+        <div class="cta-row">
+          <a class="btn btn-solid" href="#work">View the work</a>
+          <a class="btn" href="#contact">Get in touch</a>
+          <!-- Place Robert_Njonjo_CV.pdf in /public and this resolves -->
+          <a class="btn" href="/Robert_Njonjo_CV.pdf">Download CV</a>
+        </div>
+      </div>
+      <div>
+        <div class="portrait">
+          <!--
+            ==========================================================
+            SWAP THE PORTRAIT HERE.
+            Drop your photo into /public as portrait.jpg, then replace
+            the <div class="portrait-ph"> below with:
+
+              <img src="/portrait.jpg" alt="Robert Kamau Njonjo">
+
+            The greyscale + amber duotone treatment is already applied
+            by CSS, so the photo will sit inside the palette rather
+            than looking pasted on.
+            ==========================================================
+          -->
+          <div class="portrait-ph">RN</div>
+        </div>
+        <div class="portrait-cap">FIG. 01 — R. NJONJO</div>
+      </div>
+    </div>
+
+    <!-- ============ SIGNATURE: REQUEST TRACE ============ -->
+    <div class="trace" id="trace">
+      <div class="trace-head">
+        <div class="trace-title">TRACE — <b>supplier portal → business central</b></div>
+        <div class="trace-code" id="traceCode">200 OK · 412ms</div>
+      </div>
+      <div class="flow" id="flow">
+        <div class="node"><div class="wire"></div><div class="node-mark"></div>
+          <div class="node-label">External portal</div><div class="node-meta">REACT / TS</div></div>
+        <div class="node"><div class="wire"></div><div class="node-mark"></div>
+          <div class="node-label">API gateway</div><div class="node-meta">ASP.NET CORE</div></div>
+        <div class="node"><div class="wire"></div><div class="node-mark"></div>
+          <div class="node-label">Token exchange</div><div class="node-meta">OAUTH 2.0 / OIDC</div></div>
+        <div class="node"><div class="wire"></div><div class="node-mark"></div>
+          <div class="node-label">Business Central</div><div class="node-meta">ODATA V4 / AL</div></div>
+        <div class="node"><div class="node-mark"></div>
+          <div class="node-label">Response</div><div class="node-meta">200 OK</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PROFILE ============ -->
+  <section id="profile">
+    <div class="sec-head">
+      <div class="eyebrow">/profile</div>
+      <h2>What I actually do</h2>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-body">
+        <p>Most enterprise software problems aren't hard because the code is hard. They're
+          hard because two systems that were never designed to talk to each other have to,
+          and the seam between them is where security, reliability and data integrity all
+          get decided at once.</p>
+        <p>That seam is my work. I design and build the integration layers over Microsoft
+          Dynamics 365 Business Central — AL extensions inside the ERP, OData and SOAP
+          services over it, gateway architectures in front of it, and the web portals that
+          expose it safely to people outside the organisation.</p>
+        <p>I work across the full stack because integration demands it. The same problem
+          reaches from an AL codeunit through a .NET service and a React front end down to
+          the IIS configuration and the CI pipeline that ships it.</p>
+      </div>
+      <div class="spec">
+        <div class="spec-row"><div class="spec-k">ERP</div>
+          <div class="spec-v">Dynamics 365 Business Central — AL codeunits, page &amp; table extensions, OData v4, SOAP, API pages</div></div>
+        <div class="spec-row"><div class="spec-k">Backend</div>
+          <div class="spec-v">C#, ASP.NET MVC, ASP.NET Core Web API, .NET Framework, Entity Framework, Python</div></div>
+        <div class="spec-row"><div class="spec-k">Frontend</div>
+          <div class="spec-v">React, TypeScript, Angular, JavaScript</div></div>
+        <div class="spec-row"><div class="spec-k">Architecture</div>
+          <div class="spec-v">API gateways, OAuth 2.0 / OIDC, role-based access control, circuit breakers, response caching</div></div>
+        <div class="spec-row"><div class="spec-k">Infra</div>
+          <div class="spec-v">Jenkins CI/CD, IIS (ARR, URL Rewrite, SSL), Windows Server, WinRM, Docker, Linux</div></div>
+        <div class="spec-row"><div class="spec-k">Data</div>
+          <div class="spec-v">SQL Server, PostgreSQL</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience">
+    <div class="sec-head">
+      <div class="eyebrow">/experience</div>
+      <h2>Four years, one specialism</h2>
+      <p class="sec-note">Every role since 2022 has come back to the same problem —
+        getting enterprise systems to exchange data they were never built to share.</p>
+    </div>
+
+    <div class="roles">
+      <article class="role now">
+        <div class="role-top">
+          <h3 class="role-org">Greencom Enterprise Solutions</h3>
+          <div class="role-when">JUL 2024 — PRESENT</div>
+        </div>
+        <div class="role-title">Software Engineer</div>
+        <ul>
+          <li><strong>Lead developer on the enterprise ERP ecosystem for the Judiciary of
+            Kenya</strong> — a four-application suite covering supplier onboarding and
+            procurement, external-entity engagement and contractor management, unified
+            behind a central API gateway.</li>
+          <li><strong>Architected the migration of the supplier procurement portal</strong>
+            from a data-replica model to a gateway API model, authoring the design covering
+            OAuth 2.0 / OIDC authentication, role-based access control, circuit-breaker
+            resilience, response caching and a phased delivery roadmap.</li>
+          <li>Designed and built <strong>REST API layers over Business Central</strong>
+            exposing ERP data to external-facing portals, with role-scoped access and
+            multi-tier approval workflows.</li>
+          <li>Developed and refactored <strong>Business Central AL codeunits</strong> for
+            procurement, store requests, petty cash and staff claims — implementing
+            idempotent upsert patterns and resolving number-series and validation defects.</li>
+          <li>Own <strong>Jenkins CI/CD pipelines</strong> for .NET and React deployment to
+            IIS, and SharePoint 2019 document-management deployment over WinRM.</li>
+          <li>Administer <strong>IIS infrastructure for client-facing payment services</strong>
+            — ARR reverse proxy, URL rewriting, SSL provisioning and DNS resolution.</li>
+          <li>Produce architecture documentation and deliver technical training to client
+            engineering teams.</li>
+        </ul>
+        <div class="stack">
+          <span class="chip">C#</span><span class="chip">AL</span><span class="chip">ASP.NET MVC</span>
+          <span class="chip">.NET CORE</span><span class="chip">REACT</span><span class="chip">TYPESCRIPT</span>
+          <span class="chip">JENKINS</span><span class="chip">IIS</span><span class="chip">SQL SERVER</span>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role-top">
+          <h3 class="role-org">Dynasoft Business Solutions</h3>
+          <div class="role-when">APR 2024 — JUL 2024</div>
+        </div>
+        <div class="role-title">System Developer — Web &amp; Mobile</div>
+        <ul>
+          <li>Built cross-platform web and mobile solutions interfacing with Microsoft
+            Dynamics 365 Business Central and NAV web services.</li>
+          <li>Implemented Jenkins CI/CD pipelines, moving the team from weekly to daily
+            release cadence.</li>
+          <li>Ran peer code reviews and mentored junior developers in .NET Core and Angular.</li>
+        </ul>
+        <div class="stack">
+          <span class="chip">.NET CORE</span><span class="chip">ANGULAR</span>
+          <span class="chip">DYNAMICS 365</span><span class="chip">JENKINS</span>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role-top">
+          <h3 class="role-org">DSL Systems and Solutions</h3>
+          <div class="role-when">APR 2023 — APR 2024</div>
+        </div>
+        <div class="role-title">Software Developer</div>
+        <ul>
+          <li>Led integration development against Business Central APIs over OData and
+            SOAP for clients across multiple sectors, working end to end from requirements
+            through deployment.</li>
+          <li>Introduced Git and GitHub version control with branching and code-review
+            standards to a team previously working without formal source control.</li>
+          <li>Migrated a .NET API to Docker containers, resolving Business Central and
+            Active Directory authentication under Linux hosting.</li>
+        </ul>
+        <div class="stack">
+          <span class="chip">ODATA</span><span class="chip">SOAP</span>
+          <span class="chip">.NET</span><span class="chip">DOCKER</span><span class="chip">GIT</span>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role-top">
+          <h3 class="role-org">Kenya Revenue Authority</h3>
+          <div class="role-when">JAN 2022 — MAR 2023</div>
+        </div>
+        <div class="role-title">Junior Software Developer</div>
+        <ul>
+          <li>Built, within a team of five, a data-exchange platform bridging KRA and
+            licensed betting operators — enabling automated transaction reporting and tax
+            assessment for the sector.</li>
+          <li>Implemented the <strong>KRA TV</strong> feature, delivering simplified tax and
+            customs content to taxpayers nationally.</li>
+        </ul>
+        <div class="stack">
+          <span class="chip">APACHE NIFI</span><span class="chip">KAFKA</span>
+          <span class="chip">C#</span><span class="chip">LINUX</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="work">
+    <div class="sec-head">
+      <div class="eyebrow">/work</div>
+      <h2>Selected work</h2>
+    </div>
+
+    <div class="case">
+      <div class="case-tag">CASE STUDY — PUBLIC SECTOR ERP</div>
+      <h3>Judiciary of Kenya — supplier and procurement ecosystem</h3>
+      <p>A four-application suite covering supplier onboarding and procurement, external-entity
+        engagement and contractor management, unified behind a central API gateway with
+        Business Central as the system of record. The procurement portal originally ran on a
+        replicated copy of ERP data — a model that drifted, aged badly and widened the
+        security surface. I architected and led its migration to a gateway API: a single
+        authenticated entry point with OAuth 2.0 token exchange, role-scoped access,
+        circuit-breaker resilience and response caching, delivered in phases against a
+        live production system.</p>
+      <a class="live" href="https://supplier.judiciary.go.ke/" target="_blank" rel="noopener">
+        <span class="dot"></span>supplier.judiciary.go.ke — live in production
+      </a>
+    </div>
+
+    <div class="mini-grid">
+      <div class="mini">
+        <h4>Event ticketing and payments platform</h4>
+        <p>PHP application with Paystack payment integration and QR-code ticket generation
+          and validation, delivered for a Nairobi hospitality client.</p>
+      </div>
+      <div class="mini">
+        <h4>Algorithmic trading indicators</h4>
+        <p>Pine Script v5 indicators for TradingView — market-structure detection,
+          dollar-index supply and demand zone tracking with volume confirmation, and
+          multi-confluence signal generation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WRITING ============ -->
+  <section id="writing">
+    <div class="sec-head">
+      <div class="eyebrow">/writing</div>
+      <h2>Notes from the seam</h2>
+    </div>
+    <div class="writing">
+      <h3>In progress</h3>
+      <p>Working notes on Business Central integration — the specific failures, error
+        messages and design decisions that only show up once a system is in production.
+        Written for the developer who has just pasted an error string into a search bar
+        at 2am.</p>
+      <div class="topics">
+        <span class="topic">Authenticating to BC OData from .NET after basic auth</span>
+        <span class="topic">Why you shouldn't replicate ERP data into your portal</span>
+        <span class="topic">Idempotent upserts and the number series trap</span>
+        <span class="topic">BC inside a Linux container — the AD problem</span>
+        <span class="topic">OData vs SOAP vs API pages</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="sec-head">
+      <div class="eyebrow">/contact</div>
+      <h2>Available for integration work</h2>
+      <p class="sec-note">Open to senior engineering and technical lead roles, and to
+        Business Central integration projects — including subcontract work for
+        implementation partners.</p>
+    </div>
+    <div class="contact-grid">
+      <a class="ct" href="mailto:rknjonjo@gmail.com">
+        <div class="ct-k">Email</div><div class="ct-v">rknjonjo@gmail.com</div></a>
+      <a class="ct" href="tel:+254745310513">
+        <div class="ct-k">Phone</div><div class="ct-v">+254 745 310 513</div></a>
+      <a class="ct" href="https://www.linkedin.com/in/robert-njonjo/" target="_blank" rel="noopener">
+        <div class="ct-k">LinkedIn</div><div class="ct-v">in/robert-njonjo</div></a>
+      <a class="ct" href="https://github.com/M1urray" target="_blank" rel="noopener">
+        <div class="ct-k">GitHub</div><div class="ct-v">github.com/M1urray</div></a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-in">
+      <span>ROBERT KAMAU NJONJO — NAIROBI, KENYA</span>
+      <span>BUILT WITH INTENT</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var flow = document.getElementById('flow');
+  if(!flow) return;
+  var nodes = Array.prototype.slice.call(flow.querySelectorAll('.node'));
+  var codeEl = document.getElementById('traceCode');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if(reduced){
+    nodes.forEach(function(n){ n.classList.add('on'); });
+    return;
+  }
+
+  var STEP = 1150, timers = [];
+  function clear(){ timers.forEach(clearTimeout); timers = []; }
+
+  function run(){
+    clear();
+    nodes.forEach(function(n){ n.classList.remove('on','fire'); });
+    if(codeEl){ codeEl.textContent = '… awaiting response'; codeEl.style.color = 'var(--steel)'; }
+
+    nodes.forEach(function(node, i){
+      timers.push(setTimeout(function(){
+        node.classList.add('on');
+        if(i < nodes.length - 1) node.classList.add('fire');
+        if(i === nodes.length - 1 && codeEl){
+          var ms = 380 + Math.floor(Math.random() * 90);
+          codeEl.textContent = '200 OK · ' + ms + 'ms';
+          codeEl.style.color = 'var(--ok)';
+        }
+      }, i * STEP));
+    });
+
+    timers.push(setTimeout(run, nodes.length * STEP + 2200));
+  }
+
+  // Only animate while the trace is on screen.
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ e.isIntersecting ? run() : clear(); });
+  }, { threshold: 0.25 });
+  io.observe(document.getElementById('trace'));
+})();
+</script>
+</body>
+</html>

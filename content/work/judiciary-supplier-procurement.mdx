@@ -1,0 +1,55 @@
+---
+title: "Judiciary of Kenya — Supplier and Procurement Ecosystem"
+description: "A four-application ERP suite over Business Central, migrated from a data-replica model to a gateway API — delivered in phases against a live production system."
+date: "2025-06-01"
+client: "Judiciary of Kenya"
+sector: "Public sector ERP"
+liveUrl: "https://supplier.judiciary.go.ke/"
+liveLabel: "supplier.judiciary.go.ke — live in production"
+stack:
+  - "C#"
+  - "AL"
+  - "ASP.NET Core"
+  - "React"
+  - "TypeScript"
+  - "OAuth 2.0 / OIDC"
+  - "IIS"
+  - "SQL Server"
+featured: true
+published: true
+---
+
+A four-application suite covering supplier onboarding and procurement,
+external-entity engagement and contractor management, unified behind a central
+API gateway with Business Central as the system of record.
+
+## The problem
+
+The procurement portal originally ran on a replicated copy of ERP data — a
+model that drifted, aged badly and widened the security surface. Every
+external-facing application spoke to its own copy of the truth, and keeping
+those copies in step was a standing cost.
+
+## The approach
+
+I architected and led the migration to a gateway API: a single authenticated
+entry point with OAuth 2.0 token exchange, role-scoped access, circuit-breaker
+resilience and response caching, delivered in phases against a live production
+system.
+
+> **TODO: draft.** The sections below expand on the design decisions — the
+> gateway topology, the token-exchange flow, the caching strategy and the phased
+> rollout. Detail to follow; nothing here is fabricated.
+
+## What it runs on
+
+- **Business Central** as the system of record, with AL codeunits for
+  procurement, store requests, petty cash and staff claims.
+- **ASP.NET Core** gateway in front of the ERP, exposing role-scoped REST APIs.
+- **React / TypeScript** portals for suppliers and external entities.
+- **IIS** with ARR reverse proxy, URL rewriting and SSL for client-facing
+  services.
+
+## Outcome
+
+TODO: draft — the measurable results of the migration.

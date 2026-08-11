@@ -1,0 +1,40 @@
+---
+title: "OData, SOAP or API Pages: Choosing the Business Central Interface"
+description: "Three ways out of Business Central, three different sets of trade-offs. A decision guide for the integration layer over the ERP."
+date: "2026-05-02"
+category: "integration"
+published: true
+author: "Robert Kamau Njonjo"
+---
+
+> **TODO: draft.** This post is a working outline. The headings below capture the
+> intended arc; the prose under each is not yet written.
+
+## The three doors out of Business Central
+
+TODO: draft — a short framing of OData v4, SOAP, and API pages, and why the choice
+is usually made by accident rather than on purpose.
+
+## How they differ
+
+TODO: draft — a comparison across shape, performance, versioning and auth.
+
+| Interface | Best for | Watch out for |
+| --------- | -------- | ------------- |
+| OData v4  | TODO     | TODO          |
+| SOAP      | TODO     | TODO          |
+| API pages | TODO     | TODO          |
+
+## A decision guide
+
+TODO: draft — turn the table above into a short set of "if this, then that" rules.
+
+```http title="request.http"
+GET /ODataV4/Company('CRONUS')/ItemList
+# TODO: draft — a representative request will go here.
+```
+
+## What to watch for in production
+
+TODO: draft — throttling, breaking changes across BC versions, and the cost of
+choosing wrong.

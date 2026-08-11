@@ -1,0 +1,43 @@
+---
+title: "Authenticating to Business Central OData from .NET after Basic Auth"
+description: "Basic auth is gone. Here is how a .NET client actually obtains a token to call Business Central OData v4 — and the failure modes that only surface in production."
+date: "2026-06-15"
+category: "dotnet"
+published: true
+author: "Robert Kamau Njonjo"
+---
+
+> **TODO: draft.** This post is a working outline. The headings below capture the
+> intended arc; the prose under each is not yet written.
+
+## The problem
+
+TODO: draft — describe the deprecation of Basic auth for Business Central web
+services and what breaks in an existing .NET integration when it is switched off.
+
+## What is actually happening
+
+TODO: draft — the OAuth 2.0 client-credentials flow, the token endpoint, and the
+scopes Business Central expects.
+
+```csharp title="TokenClient.cs"
+// TODO: draft — a representative token-acquisition example will go here.
+public sealed class TokenClient
+{
+    // placeholder
+}
+```
+
+## The fix
+
+TODO: draft. Cover, in order:
+
+- registering the app and granting API permissions
+- acquiring the token
+- attaching it to the OData request
+- caching and refresh
+
+## What to watch for in production
+
+TODO: draft — clock skew, scope mismatches, and the errors Business Central
+returns that do not say what they mean.
