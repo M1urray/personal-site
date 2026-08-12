@@ -1,7 +1,7 @@
-import { getAllPosts, categoryLabels } from "@/lib/posts";
+import { getPublishedPosts, categoryLabels } from "@/lib/blog";
 import { siteConfig } from "@/lib/site";
 
-export const dynamic = "force-static";
+export const revalidate = 3600;
 
 const escapeMap: Record<string, string> = {
   "<": "&lt;",
@@ -15,9 +15,9 @@ function escapeXml(value: string): string {
   return value.replace(/[<>&'"]/g, (c) => escapeMap[c] ?? c);
 }
 
-export function GET() {
+export async function GET() {
   const base = siteConfig.url;
-  const posts = getAllPosts();
+  const posts = await getPublishedPosts();
 
   const items = posts
     .map(
@@ -25,7 +25,7 @@ export function GET() {
       <title>${escapeXml(post.title)}</title>
       <link>${base}/writing/${post.slug}</link>
       <guid isPermaLink="true">${base}/writing/${post.slug}</guid>
-      <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+      <pubDate>${post.publishedAt.toUTCString()}</pubDate>
       <category>${escapeXml(categoryLabels[post.category])}</category>
       <description>${escapeXml(post.description)}</description>
     </item>`,

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/work";
-import { formatDate } from "@/lib/posts";
+import { formatDate } from "@/lib/blog";
 import { PostBody } from "@/components/PostBody";
 import { JsonLd } from "@/components/JsonLd";
 import { siteConfig } from "@/lib/site";

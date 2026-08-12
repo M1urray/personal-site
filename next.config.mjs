@@ -12,6 +12,12 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Cover images and in-post images are served from Vercel Blob.
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+    ],
+  },
   // Ensure the OG-image fonts are bundled into the /og serverless function.
   outputFileTracingIncludes: {
     "/og": ["./app/og/fonts/**"],

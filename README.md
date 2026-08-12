@@ -21,8 +21,10 @@ turn search traffic and referrals into hiring conversations.
 - **[Neon](https://neon.tech/)** serverless Postgres via **[Drizzle ORM](https://orm.drizzle.team/)**
 - **[Resend](https://resend.com/)** + **React Email** for transactional email
 - **[Zod](https://zod.dev/)** for all input validation
-- **MDX** for content — `gray-matter` frontmatter, `next-mdx-remote/rsc`,
-  syntax highlighting via `rehype-pretty-code` (Shiki)
+- **Blog posts in Postgres**, written in the private `/studio`; rendered from
+  Markdown with `remark`/`rehype` and highlighted by `rehype-pretty-code` (Shiki)
+- **MDX** for in-repo case studies — `gray-matter` frontmatter, `next-mdx-remote/rsc`
+- **[Vercel Blob](https://vercel.com/docs/storage/vercel-blob)** for post images
 - Deployed on **[Vercel](https://vercel.com/)**
 
 ## Highlights
@@ -77,9 +79,13 @@ All variables are optional for local development — copy `.env.example` to
 | `CONTACT_FROM_EMAIL`   | Verified Resend sender, e.g. `Robert <hello@yourdomain.com>`.  |
 | `IP_HASH_SALT`         | Salt used to hash client IPs before storage. Raw IPs are never stored. |
 | `NEXT_PUBLIC_SITE_URL` | Public canonical origin (no trailing slash), e.g. `https://robertnjonjo.com`. |
+| `STUDIO_PASSWORD`      | Password for the private `/studio` writing interface.           |
+| `SESSION_SECRET`       | Signs the studio session cookie (`openssl rand -base64 32`).   |
+| `BLOB_READ_WRITE_TOKEN`| Vercel Blob token for post image uploads. Injected automatically once a Blob store exists. |
 
-Without `DATABASE_URL` / Resend keys: the contact form shows a mailto fallback
-and the newsletter is hidden.
+Degradation with nothing configured: the site builds and renders, the blog shows
+an empty state, the contact form falls back to a mailto link, the newsletter is
+hidden, and `/studio` 404s.
 
 ## Database
 
@@ -89,16 +95,35 @@ post_views). Migrations are in [`drizzle/`](drizzle/).
 ```bash
 pnpm db:generate   # generate a migration from schema changes
 pnpm db:push       # push the schema to your Neon database
+pnpm db:seed       # one-off: import any legacy content/posts/*.mdx into the DB
 ```
 
-## Content
+## Writing (the studio)
 
-- **Blog posts** — add an `.mdx` file to [`content/posts/`](content/posts/) with
-  frontmatter (`title`, `description`, `date`, `category`, `published`). It
-  appears on `/writing` automatically, no other change needed.
-- **Case studies** — add an `.mdx` file to [`content/work/`](content/work/) with
-  frontmatter (`title`, `description`, `date`, `client`, `sector`, `stack`,
-  optional `liveUrl`, `featured`).
+Blog posts live in the database and are written at **`/studio`** — a private,
+password-gated, phone-friendly editor. Sign in with `STUDIO_PASSWORD`, then:
+
+- write in **Markdown**, with a live **Preview** tab that uses the exact same
+  renderer as the published page
+- **upload images** straight from your camera roll (stored in Vercel Blob) — they
+  are inserted at the cursor, or set as the post's cover
+- save a **draft**, then **publish** when ready
+
+Publishing calls `revalidatePath`, so the post is live immediately while still
+being served from the cache at static speed.
+
+Post bodies are rendered as **Markdown, never MDX**, and raw HTML is dropped —
+nothing stored in the database is ever executed. Headings in a body are shifted
+down one level so the post title stays the page's only `<h1>`.
+
+If `STUDIO_PASSWORD` or `SESSION_SECRET` is unset, `/studio` returns 404 rather
+than exposing an unprotected editor.
+
+### Case studies
+
+Case studies are curated and stay in the repo: add an `.mdx` file to
+[`content/work/`](content/work/) with frontmatter (`title`, `description`,
+`date`, `client`, `sector`, `stack`, optional `liveUrl`, `featured`).
 
 Categories are fixed to `business-central`, `dotnet`, `integration`.
 

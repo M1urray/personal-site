@@ -1,30 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
-  getAllPosts,
-  getPostBySlug,
+  getPublishedPost,
+  getPublishedPosts,
+  getRelatedPosts,
   categoryLabels,
   formatDate,
-} from "@/lib/posts";
-import { PostBody } from "@/components/PostBody";
+} from "@/lib/blog";
+import { MarkdownBody } from "@/components/MarkdownBody";
 import { JsonLd } from "@/components/JsonLd";
 import { ViewCounter } from "@/components/ViewCounter";
 import { siteConfig } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+/** Pre-render known posts; new ones render on first request and then cache. */
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
+
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post || !post.published) return {};
+  const post = await getPublishedPost(slug);
+  if (!post) return {};
 
   const url = `/writing/${post.slug}`;
-  const ogImage = `/og?title=${encodeURIComponent(post.title)}&eyebrow=${post.category}`;
+  const ogImage =
+    post.coverUrl ??
+    `/og?title=${encodeURIComponent(post.title)}&eyebrow=${post.category}`;
 
   return {
     title: post.title,
@@ -35,8 +44,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: post.title,
       description: post.description,
       url,
-      publishedTime: new Date(post.date).toISOString(),
-      authors: [post.author],
+      publishedTime: post.publishedAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: [siteConfig.name],
       images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
@@ -50,21 +60,19 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PostPage({ params }: Params) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post || !post.published) notFound();
+  const post = await getPublishedPost(slug);
+  if (!post) notFound();
+
+  const related = await getRelatedPosts(post.slug, post.category);
 
   const blogLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
-    datePublished: new Date(post.date).toISOString(),
-    dateModified: new Date(post.date).toISOString(),
-    author: {
-      "@type": "Person",
-      name: post.author,
-      url: siteConfig.url,
-    },
+    datePublished: post.publishedAt.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: { "@type": "Person", name: siteConfig.name, url: siteConfig.url },
     publisher: { "@type": "Person", name: siteConfig.name },
     mainEntityOfPage: {
       "@type": "WebPage",
@@ -73,6 +81,7 @@ export default async function PostPage({ params }: Params) {
     url: `${siteConfig.url}/writing/${post.slug}`,
     articleSection: categoryLabels[post.category],
     inLanguage: "en",
+    ...(post.coverUrl ? { image: post.coverUrl } : {}),
   };
 
   return (
@@ -87,12 +96,51 @@ export default async function PostPage({ params }: Params) {
       <h1 className="article-title">{post.title}</h1>
       <div className="article-meta">
         <span className="post-cat">{categoryLabels[post.category]}</span>
-        <span>{formatDate(post.date)}</span>
+        <span>{formatDate(post.publishedAt)}</span>
         <span>{post.readingTime} min read</span>
         <ViewCounter slug={post.slug} />
       </div>
 
-      <PostBody source={post.content} />
+      {post.coverUrl && (
+        <div className="article-cover">
+          <Image
+            src={post.coverUrl}
+            alt={post.coverAlt ?? ""}
+            width={1200}
+            height={630}
+            sizes="(max-width: 800px) 100vw, 760px"
+            className="article-cover-img"
+            priority
+          />
+        </div>
+      )}
+
+      <MarkdownBody source={post.body} />
+
+      {related.length > 0 && (
+        <section className="read-next" aria-labelledby="read-next">
+          <h2 className="read-next-head" id="read-next">
+            Read next
+          </h2>
+          <div className="read-next-grid">
+            {related.map((next) => (
+              <Link
+                key={next.slug}
+                href={`/writing/${next.slug}`}
+                className="mini next-card"
+              >
+                <div className="post-meta">
+                  <span className="post-cat">
+                    {categoryLabels[next.category]}
+                  </span>
+                  <span>{next.readingTime} min</span>
+                </div>
+                <h3 className="next-title">{next.title}</h3>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="article-foot">
         <Link href="/writing" className="back-link">

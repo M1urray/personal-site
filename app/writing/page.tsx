@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { getAllPosts, categoryLabels, formatDate } from "@/lib/posts";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  getPublishedPosts,
+  categoryLabels,
+  formatDate,
+  type BlogPost,
+} from "@/lib/blog";
 import { PostFilter, type PostListItem } from "@/components/PostFilter";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { newsletterEnabled } from "@/lib/env";
@@ -21,16 +28,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WritingPage() {
-  const posts: PostListItem[] = getAllPosts().map((post) => ({
+/** Re-rendered on demand when a post is published; hourly otherwise. */
+export const revalidate = 3600;
+
+function toListItem(post: BlogPost): PostListItem {
+  return {
     slug: post.slug,
     title: post.title,
     description: post.description,
-    date: formatDate(post.date),
+    date: formatDate(post.publishedAt),
     category: post.category,
     categoryLabel: categoryLabels[post.category],
     readingTime: post.readingTime,
-  }));
+    coverUrl: post.coverUrl,
+    coverAlt: post.coverAlt,
+  };
+}
+
+export default async function WritingPage() {
+  const all = await getPublishedPosts();
+  const featured = all.find((p) => p.featured) ?? all[0] ?? null;
+  const rest = featured ? all.filter((p) => p.slug !== featured.slug) : all;
 
   return (
     <div className="page">
@@ -40,7 +58,46 @@ export default function WritingPage() {
         <p className="sec-note">{description}</p>
       </div>
 
-      <PostFilter posts={posts} />
+      {all.length === 0 ? (
+        <p className="empty-note">
+          The first posts are on their way — check back soon.
+        </p>
+      ) : (
+        <>
+          {featured && (
+            <Link href={`/writing/${featured.slug}`} className="lead">
+              {featured.coverUrl && (
+                <div className="lead-media">
+                  <Image
+                    src={featured.coverUrl}
+                    alt={featured.coverAlt ?? ""}
+                    fill
+                    sizes="(max-width: 860px) 100vw, 1180px"
+                    className="lead-img"
+                    priority
+                  />
+                </div>
+              )}
+              <div className="lead-copy">
+                <div className="post-meta">
+                  <span className="post-cat">
+                    {categoryLabels[featured.category]}
+                  </span>
+                  <span>{formatDate(featured.publishedAt)}</span>
+                  <span>{featured.readingTime} min read</span>
+                </div>
+                <h2 className="lead-title">{featured.title}</h2>
+                {featured.description && (
+                  <p className="lead-desc">{featured.description}</p>
+                )}
+                <span className="work-more">Read it →</span>
+              </div>
+            </Link>
+          )}
+
+          {rest.length > 0 && <PostFilter posts={rest.map(toListItem)} />}
+        </>
+      )}
 
       <NewsletterSignup enabled={newsletterEnabled()} />
     </div>

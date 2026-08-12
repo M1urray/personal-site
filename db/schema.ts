@@ -3,8 +3,10 @@ import {
   serial,
   text,
   integer,
+  boolean,
   timestamp,
   pgEnum,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const subscriberStatus = pgEnum("subscriber_status", [
@@ -18,6 +20,45 @@ export const enquiryStatus = pgEnum("enquiry_status", [
   "read",
   "replied",
 ]);
+
+export const postStatus = pgEnum("post_status", ["draft", "published"]);
+
+export const postCategory = pgEnum("post_category", [
+  "business-central",
+  "dotnet",
+  "integration",
+]);
+
+/**
+ * Blog posts. Authored in the private /studio and stored here so they can be
+ * published from anywhere (including a phone) without a redeploy. Bodies are
+ * plain Markdown — never MDX — so nothing from the database is ever executed.
+ */
+export const posts = pgTable(
+  "posts",
+  {
+    id: serial("id").primaryKey(),
+    slug: text("slug").notNull().unique(),
+    title: text("title").notNull(),
+    description: text("description").notNull().default(""),
+    body: text("body").notNull().default(""),
+    category: postCategory("category").notNull().default("business-central"),
+    coverUrl: text("cover_url"),
+    coverAlt: text("cover_alt"),
+    status: postStatus("status").notNull().default("draft"),
+    featured: boolean("featured").notNull().default(false),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("posts_status_published_at_idx").on(table.status, table.publishedAt),
+  ],
+);
 
 /** Newsletter subscribers — double opt-in, token-based unsubscribe. */
 export const subscribers = pgTable("subscribers", {
@@ -59,3 +100,5 @@ export const postViews = pgTable("post_views", {
 export type Subscriber = typeof subscribers.$inferSelect;
 export type Enquiry = typeof enquiries.$inferSelect;
 export type PostView = typeof postViews.$inferSelect;
+export type Post = typeof posts.$inferSelect;
+export type NewPost = typeof posts.$inferInsert;

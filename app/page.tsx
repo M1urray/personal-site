@@ -4,12 +4,16 @@ import { RequestTrace } from "@/components/RequestTrace";
 import { JsonLd } from "@/components/JsonLd";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { HomeWriting } from "@/components/HomeWriting";
 import { contactFormEnabled, newsletterEnabled } from "@/lib/env";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
+
+/** Refreshed on demand when a post is published; hourly otherwise. */
+export const revalidate = 3600;
 
 const personLd = {
   "@context": "https://schema.org",
@@ -393,30 +397,7 @@ export default function HomePage() {
           <div className="eyebrow">/writing</div>
           <h2>Notes from the seam</h2>
         </div>
-        <div className="writing">
-          <h3>In progress</h3>
-          <p>
-            Working notes on Business Central integration — the specific
-            failures, error messages and design decisions that only show up once
-            a system is in production. Written for the developer who has just
-            pasted an error string into a search bar at 2am.
-          </p>
-          <div className="topics">
-            <span className="topic">
-              Authenticating to BC OData from .NET after basic auth
-            </span>
-            <span className="topic">
-              Why you shouldn&apos;t replicate ERP data into your portal
-            </span>
-            <span className="topic">
-              Idempotent upserts and the number series trap
-            </span>
-            <span className="topic">
-              BC inside a Linux container — the AD problem
-            </span>
-            <span className="topic">OData vs SOAP vs API pages</span>
-          </div>
-        </div>
+        <HomeWriting />
         <NewsletterSignup enabled={newsletterEnabled()} />
       </section>
 

@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
-import { getAllPosts } from "@/lib/posts";
+import { getPublishedPosts } from "@/lib/blog";
 import { getAllCaseStudies } from "@/lib/work";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteConfig.url;
   const now = new Date();
 
@@ -41,12 +43,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const posts: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
-    url: `${base}/writing/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const posts: MetadataRoute.Sitemap = (await getPublishedPosts()).map(
+    (post) => ({
+      url: `${base}/writing/${post.slug}`,
+      lastModified: post.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }),
+  );
 
   return [...staticRoutes, ...cases, ...posts];
 }
