@@ -44,3 +44,7 @@ next-env.d.ts
 !.vscode/extensions.json
 
 .vercel
+
+# Never commit real env files — but keep the documented template tracked.
+.env*
+!.env.example

@@ -96,16 +96,7 @@ export async function PUT(req: Request, { params }: Ctx) {
   }
 
   const columns = toColumns(parsed.data);
-  if (!columns.slug) {
-    return NextResponse.json(
-      {
-        ok: false,
-        message: "That title doesn’t produce a usable web address.",
-        fieldErrors: { slug: "Enter a slug using letters or numbers." },
-      },
-      { status: 400 },
-    );
-  }
+  const suppliedSlug = (parsed.data.slug ?? "").trim();
 
   try {
     const existing = await db
@@ -122,6 +113,20 @@ export async function PUT(req: Request, { params }: Ctx) {
       );
     }
 
+    // Retitling an existing post must not silently move its URL and break
+    // every link to it — only change the slug when one is explicitly supplied.
+    const slug = suppliedSlug ? columns.slug : previous.slug;
+    if (!slug) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "That title doesn’t produce a usable web address.",
+          fieldErrors: { slug: "Enter a slug using letters or numbers." },
+        },
+        { status: 400 },
+      );
+    }
+
     // Stamp publishedAt the first time it goes live; keep it stable after.
     const publishedAt =
       columns.status === "published"
@@ -130,11 +135,11 @@ export async function PUT(req: Request, { params }: Ctx) {
 
     await db
       .update(posts)
-      .set({ ...columns, publishedAt, updatedAt: new Date() })
+      .set({ ...columns, slug, publishedAt, updatedAt: new Date() })
       .where(eq(posts.id, id));
 
-    revalidatePost(columns.slug, previous.slug);
-    return NextResponse.json({ ok: true, post: { id, slug: columns.slug } });
+    revalidatePost(slug, previous.slug);
+    return NextResponse.json({ ok: true, post: { id, slug } });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     if (message.includes("duplicate key") || message.includes("unique")) {

@@ -4,7 +4,7 @@
  *
  *   pnpm db:seed
  */
-import "dotenv/config";
+import { config } from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
@@ -12,6 +12,10 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
 import * as schema from "../db/schema.ts";
+
+// Match Next.js: .env.local wins, .env is the fallback.
+config({ path: ".env.local" });
+config({ path: ".env" });
 
 const url = process.env.DATABASE_URL;
 if (!url) {
