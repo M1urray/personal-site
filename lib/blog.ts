@@ -59,6 +59,63 @@ function toBlogPost(row: Row): BlogPost {
 const publishedOnly = eq(posts.status, "published");
 
 /**
+ * An unreachable database is an operational problem, not a bug in a query, and
+ * it happens on every read — so dumping the full SQL at each call site buries
+ * the one fact that matters. Report it once, as a warning with the fix in it,
+ * and keep the loud stack traces for errors that are genuinely unexpected.
+ */
+let connectionProblemReported = false;
+
+const CONNECTION_FAILURE =
+  /password authentication failed|could not connect|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|terminating connection|connection terminated|timeout|SSL/i;
+
+/**
+ * Drizzle wraps driver errors, so the useful text ("password authentication
+ * failed") is on `cause`, not on the error itself. Walk the chain.
+ */
+function messageChain(err: unknown): string[] {
+  const parts: string[] = [];
+  let current: unknown = err;
+
+  for (let depth = 0; current && depth < 5; depth++) {
+    if (current instanceof Error) {
+      parts.push(current.message);
+      current = (current as { cause?: unknown }).cause;
+    } else {
+      parts.push(String(current));
+      break;
+    }
+  }
+
+  return parts;
+}
+
+function reportDbError(operation: string, err: unknown): void {
+  const chain = messageChain(err);
+
+  if (chain.some((m) => CONNECTION_FAILURE.test(m))) {
+    if (!connectionProblemReported) {
+      connectionProblemReported = true;
+      // The root cause is the useful one; the outer frames are just the query.
+      const rootCause = chain.at(-1) ?? "unknown";
+      console.warn(
+        `[blog] Database unreachable — the blog is rendering empty. ` +
+          `Check DATABASE_URL (a Neon password reset invalidates the old one). ` +
+          `Cause: ${rootCause}`,
+      );
+    }
+    return;
+  }
+
+  console.error(`[blog] ${operation} failed:`, err);
+}
+
+/** Called after a successful read so a later outage is reported again. */
+function noteDbReachable(): void {
+  connectionProblemReported = false;
+}
+
+/**
  * All published posts, newest first. Returns [] when no database is
  * configured so the site still builds and renders.
  */
@@ -72,9 +129,10 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
       .from(posts)
       .where(publishedOnly)
       .orderBy(desc(posts.publishedAt));
+    noteDbReachable();
     return rows.map(toBlogPost);
   } catch (err) {
-    console.error("[blog] getPublishedPosts failed:", err);
+    reportDbError("getPublishedPosts", err);
     return [];
   }
 }
@@ -89,9 +147,10 @@ export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
       .from(posts)
       .where(and(publishedOnly, eq(posts.slug, slug)))
       .limit(1);
+    noteDbReachable();
     return rows[0] ? toBlogPost(rows[0]) : null;
   } catch (err) {
-    console.error("[blog] getPublishedPost failed:", err);
+    reportDbError("getPublishedPost", err);
     return null;
   }
 }
@@ -122,9 +181,10 @@ export async function getRelatedPosts(
         desc(posts.publishedAt),
       )
       .limit(limit);
+    noteDbReachable();
     return rows.map(toBlogPost);
   } catch (err) {
-    console.error("[blog] getRelatedPosts failed:", err);
+    reportDbError("getRelatedPosts", err);
     return [];
   }
 }
