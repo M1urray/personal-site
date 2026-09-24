@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { RequestTrace } from "@/components/RequestTrace";
 import { JsonLd } from "@/components/JsonLd";
 import { ContactForm } from "@/components/ContactForm";
@@ -87,7 +88,13 @@ export default function HomePage() {
                   <img src="/portrait.jpg" alt="Robert Kamau Njonjo" />
                 The greyscale + amber duotone treatment is applied by CSS.
               */}
-              <div className="portrait-ph">RN</div>
+              <Image
+                src="/portrait.jpg"
+                alt="Robert Kamau Njonjo"
+                width={400}
+                height={400}
+                priority
+              />
             </div>
             <div className="portrait-cap">FIG. 01 — R. NJONJO</div>
           </div>

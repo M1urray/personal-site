@@ -22,6 +22,7 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "node scripts/seed-posts.ts",
+    "series:seed": "node scripts/seed-series.ts",
     "cv:pdf": "node scripts/generate-cv-pdf.ts"
   },
   "dependencies": {

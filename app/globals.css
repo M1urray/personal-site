@@ -373,19 +373,10 @@ h1 .l2 {
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(1) contrast(1.06) brightness(0.94);
 }
-.portrait::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(240, 166, 60, 0.16),
-    rgba(10, 16, 23, 0.5)
-  );
-  mix-blend-mode: overlay;
-}
+/* The reference shipped a greyscale + amber duotone treatment here
+   (filter: grayscale(1) plus an overlay blend). Removed so the portrait
+   reads in full colour, which Robert asked for. */
 .portrait-ph {
   width: 100%;
   height: 100%;
