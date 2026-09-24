@@ -82,6 +82,7 @@ All variables are optional for local development — copy `.env.example` to
 | `STUDIO_PASSWORD`      | Password for the private `/studio` writing interface.           |
 | `SESSION_SECRET`       | Signs the studio session cookie (`openssl rand -base64 32`).   |
 | `BLOB_READ_WRITE_TOKEN`| Vercel Blob token for post image uploads. Injected automatically once a Blob store exists. |
+| `CRON_SECRET`          | Bearer token Vercel Cron sends to `/api/cron/publish`. Unset ⇒ no scheduled publishing. |
 
 Degradation with nothing configured: the site builds and renders, the blog shows
 an empty state, the contact form falls back to a mailto link, the newsletter is
@@ -139,6 +140,27 @@ down one level so the post title stays the page's only `<h1>`.
 
 If `STUDIO_PASSWORD` or `SESSION_SECRET` is unset, `/studio` returns 404 rather
 than exposing an unprotected editor.
+
+### Scheduled publishing
+
+Drafts can be queued instead of published by hand. A draft with a
+`scheduled_for` date is taken live by a daily Vercel Cron
+([`vercel.json`](vercel.json) → `/api/cron/publish`), which publishes **at most
+one post per run** and then revalidates `/writing`, `/`, `/rss.xml` and
+`/sitemap.xml`.
+
+The cadence lives in each post's date, not in the cron expression. A missed run
+therefore publishes late rather than never, and the running order can be changed
+from the studio without a redeploy.
+
+Set the dates in the studio: the **Publishing queue** panel dates a whole batch
+of drafts at once (start date + gap in days), and each post has its own
+**Publish on** field. Nothing is ever auto-published without a date on it, and
+`/api/cron/publish` 404s unless `CRON_SECRET` is set.
+
+Publishing is what puts a post in `/rss.xml` — which is the trigger Zapier
+watches to share it to LinkedIn. See [`docs/content-plan.md`](docs/content-plan.md)
+for the zap.
 
 ### Case studies
 

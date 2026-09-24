@@ -15,6 +15,13 @@
       "when": 1786518974148,
       "tag": "0001_fine_ser_duncan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790268995932,
+      "tag": "0002_gifted_slapstick",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,9 @@ import { desc } from "drizzle-orm";
 import { getDb } from "@/db";
 import { posts } from "@/db/schema";
 import { categoryLabels, formatDate, type Category } from "@/lib/blog";
+import { formatQueued } from "@/lib/schedule";
 import { StudioHeader } from "@/components/studio/StudioHeader";
+import { QueuePanel } from "@/components/studio/QueuePanel";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +20,17 @@ export default async function StudioIndexPage() {
           category: posts.category,
           status: posts.status,
           featured: posts.featured,
+          scheduledFor: posts.scheduledFor,
           updatedAt: posts.updatedAt,
         })
         .from(posts)
         .orderBy(desc(posts.updatedAt))
     : [];
+
+  const drafts = rows.filter((row) => row.status === "draft");
+  const queued = drafts
+    .filter((row) => row.scheduledFor)
+    .sort((a, b) => a.scheduledFor!.getTime() - b.scheduledFor!.getTime());
 
   return (
     <>
@@ -49,6 +57,14 @@ export default async function StudioIndexPage() {
           </p>
         )}
 
+        {db && drafts.length > 0 && (
+          <QueuePanel
+            unscheduled={drafts.length - queued.length}
+            scheduled={queued.length}
+            nextUp={queued[0]?.scheduledFor ?? null}
+          />
+        )}
+
         {rows.length > 0 && (
           <div className="studio-list">
             {rows.map((row) => (
@@ -60,17 +76,27 @@ export default async function StudioIndexPage() {
                 <div className="studio-item-meta">
                   <span
                     className={`studio-badge ${
-                      row.status === "published" ? "is-live" : "is-draft"
+                      row.status === "published"
+                        ? "is-live"
+                        : row.scheduledFor
+                          ? "is-queued"
+                          : "is-draft"
                     }`}
                   >
-                    {row.status === "published" ? "live" : "draft"}
+                    {row.status === "published"
+                      ? "live"
+                      : row.scheduledFor
+                        ? "queued"
+                        : "draft"}
                   </span>
                   <span>{categoryLabels[row.category as Category]}</span>
                   {row.featured && (
                     <span className="studio-star">featured</span>
                   )}
                   <span className="studio-when">
-                    edited {formatDate(row.updatedAt)}
+                    {row.status === "draft" && row.scheduledFor
+                      ? `goes live ${formatQueued(row.scheduledFor)}`
+                      : `edited ${formatDate(row.updatedAt)}`}
                   </span>
                 </div>
                 <div className="studio-item-title">{row.title}</div>

@@ -63,6 +63,27 @@ export async function verifyPassword(submitted: string): Promise<boolean> {
   return timingSafeEqual(a, b);
 }
 
+export function isCronConfigured(): boolean {
+  return Boolean(process.env.CRON_SECRET);
+}
+
+/**
+ * Verify the bearer token Vercel Cron sends with a scheduled invocation.
+ * Same digest-then-compare approach as the password: never branch on the
+ * secret's own bytes.
+ */
+export async function verifyCronSecret(
+  header: string | null,
+): Promise<boolean> {
+  const expected = process.env.CRON_SECRET;
+  if (!expected || !header) return false;
+  const supplied = header.startsWith("Bearer ")
+    ? header.slice(7).trim()
+    : header;
+  const [a, b] = await Promise.all([sha256(supplied), sha256(expected)]);
+  return timingSafeEqual(a, b);
+}
+
 /** Mint a signed session token valid for SESSION_TTL_SECONDS. */
 export async function createSessionToken(): Promise<string | null> {
   const secret = process.env.SESSION_SECRET;

@@ -3,7 +3,11 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getDb } from "@/db";
 import { posts } from "@/db/schema";
-import { postInputSchema, toColumns } from "@/lib/post-input";
+import {
+  postInputSchema,
+  scheduledForColumn,
+  toColumns,
+} from "@/lib/post-input";
 import { fieldErrorsFromZod } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -133,9 +137,22 @@ export async function PUT(req: Request, { params }: Ctx) {
         ? (previous.publishedAt ?? new Date())
         : null;
 
+    // A post that's live has nothing left to queue, so publishing by hand
+    // always drops the date — otherwise the cron would find it again.
+    const schedule =
+      columns.status === "published"
+        ? { scheduledFor: null }
+        : scheduledForColumn(parsed.data);
+
     await db
       .update(posts)
-      .set({ ...columns, slug, publishedAt, updatedAt: new Date() })
+      .set({
+        ...columns,
+        ...schedule,
+        slug,
+        publishedAt,
+        updatedAt: new Date(),
+      })
       .where(eq(posts.id, id));
 
     revalidatePost(slug, previous.slug);

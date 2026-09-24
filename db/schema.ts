@@ -48,6 +48,13 @@ export const posts = pgTable(
     status: postStatus("status").notNull().default("draft"),
     featured: boolean("featured").notNull().default(false),
     publishedAt: timestamp("published_at", { withTimezone: true }),
+    /**
+     * When the scheduled publisher should take this draft live. A draft with a
+     * date is queued; one without is untouched by the cron. Deliberately not a
+     * third status value: the public site only ever reads `status`, so a queued
+     * post cannot leak early however the schedule is set.
+     */
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -57,6 +64,7 @@ export const posts = pgTable(
   },
   (table) => [
     index("posts_status_published_at_idx").on(table.status, table.publishedAt),
+    index("posts_scheduled_for_idx").on(table.status, table.scheduledFor),
   ],
 );
 

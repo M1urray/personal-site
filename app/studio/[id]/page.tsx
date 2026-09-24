@@ -5,6 +5,7 @@ import { getDb } from "@/db";
 import { posts } from "@/db/schema";
 import { StudioHeader } from "@/components/studio/StudioHeader";
 import { PostEditor } from "@/components/studio/PostEditor";
+import { toDateInput } from "@/lib/schedule";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,7 @@ export default async function EditPostPage({
             coverAlt: row.coverAlt ?? "",
             status: row.status,
             featured: row.featured,
+            scheduledFor: row.scheduledFor ? toDateInput(row.scheduledFor) : "",
           }}
         />
       </div>

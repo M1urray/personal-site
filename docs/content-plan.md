@@ -78,11 +78,15 @@ Documents" is the stronger finish if you want to end on security.)
 
 ## Cadence
 
-**Two a week — Tuesday and Thursday, ~08:00 EAT.** Fifteen weeks of runway.
+**One every two days, 06:00 UTC (09:00 EAT).** About two months of runway for
+the 31 posts.
 
-Tuesday/Thursday morning is when technical LinkedIn traffic is highest and
-weekend posts are wasted. Don't batch-publish: the value is a visible, sustained
-cadence, which is the thing a hiring manager reads as "this person is active".
+Don't batch-publish: the value is a visible, sustained cadence, which is the
+thing a hiring manager reads as "this person is active".
+
+The cadence is stored per post, in `posts.scheduled_for` — not in the cron
+expression. A missed run therefore publishes late rather than never, and the
+running order can be changed from the studio without a redeploy.
 
 ---
 
@@ -92,23 +96,61 @@ cadence, which is the thing a hiring manager reads as "this person is active".
 pnpm series:seed
 ```
 
-Inserts all 30 as **drafts**. Re-running skips anything already there; `--force`
+Inserts all 31 as **drafts**. Re-running skips anything already there; `--force`
 overwrites drafts but never touches a published post.
 
-Then, for each one: open `/studio`, read it, adjust anything that doesn't sound
-like you, and hit Publish. **Read every one before it goes out** — your name is
-on it.
+Nothing is queued by seeding. A draft only goes out once it has a date on it.
 
 ---
 
-## The Zapier automation
+## Queueing them
 
-The site publishes an RSS feed at `/rss.xml` containing every published post
-with an absolute URL. That is the integration point — no API keys, no webhook to
-maintain.
+Open `/studio`. The **Publishing queue** panel at the top takes a start date and
+a gap in days, and dates every unscheduled draft in the running order above.
+"Clear queue" takes them all back to plain drafts. Individual posts get a
+**Publish on** date in the editor's post settings.
 
-Publishing a post revalidates the feed immediately (`revalidatePath("/rss.xml")`),
-so a post is in the feed within seconds of you hitting Publish.
+**Read every one before you queue it** — your name is on it, and the scheduler
+publishes without asking again. Queue in batches you've actually read: a week's
+worth at a time is a reasonable rhythm.
+
+---
+
+## How a post actually goes out
+
+```
+Vercel Cron  07:00 UTC daily
+      │
+      ▼
+GET /api/cron/publish            Authorization: Bearer $CRON_SECRET
+      │  takes the oldest due draft live (at most one per run)
+      │  revalidates /writing, /, /rss.xml, /sitemap.xml
+      ▼
+/rss.xml gains an <item>
+      │
+      ▼
+Zapier — RSS by Zapier: New Item in Feed
+      │
+      ▼
+Zapier — LinkedIn: Create Share Update
+```
+
+Two halves, split on purpose:
+
+- **The site half is Vercel Cron, not Zapier.** Zapier would need an endpoint to
+  call anyway, so the endpoint is the work either way — and running it in the
+  deployment means it can call `revalidatePath` directly, costs no Zapier tasks,
+  and can't publish while Zapier is down or its trigger is misconfigured.
+- **The LinkedIn half is Zapier**, because Zapier holds the LinkedIn OAuth
+  token. RSS is the integration point: no API keys on our side, no webhook to
+  maintain.
+
+The cron runs at 07:00 UTC — an hour after the 06:00 publish slot — because
+Vercel may fire a cron up to an hour late, and a late run must never skip a day.
+
+**At most one post per run.** If the cron were down for a week, draining the
+backlog at once would fire a burst of LinkedIn posts; a queue running a few days
+late is much the lesser problem.
 
 ### Zap
 
@@ -137,14 +179,28 @@ Full post: {{link}}
 
 ### Notes
 
-- **Turn the Zap on *after* you publish the first post manually.** RSS triggers
-  can fire for existing items on first connect; you do not want thirty LinkedIn
-  posts in one minute.
-- Zapier polls every 5–15 minutes on most plans. Publish the night before if you
-  want a precise morning slot, or let it drift — it doesn't matter much.
+- **Publish one post by hand from the studio before you turn the Zap on.** RSS
+  triggers can fire for every existing item on first connect. With one item in
+  the feed the worst case is one duplicate share; with thirty it's thirty.
+- Zapier polls every 5–15 minutes on most plans, so a post queued for 06:00 UTC
+  reaches LinkedIn somewhere in the following quarter-hour. Close enough.
 - Keep hashtags to three or four. More reads as spam and LinkedIn down-ranks it.
 - The `description` field is the post summary from the studio, so it's worth
   writing that as the LinkedIn hook rather than as an abstract.
+- A post with a cover image also emits an `<enclosure>`, which Zapier can attach
+  to the share. Without one, LinkedIn falls back to the page's OpenGraph card.
+
+### Checking on it
+
+The scheduler's runs show up under **Vercel → the project → Logs**, filtered to
+`/api/cron/publish`. A successful run logs the slug it published.
+
+To publish the next due post immediately rather than waiting for the cron:
+
+```bash
+curl -X POST https://<your-site>/api/cron/publish \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
 
 ### When you buy the domain
 

@@ -20,16 +20,22 @@ export async function GET() {
   const posts = await getPublishedPosts();
 
   const items = posts
-    .map(
-      (post) => `    <item>
+    .map((post) => {
+      // Zapier reads the enclosure to attach an image to the LinkedIn share;
+      // without a cover it falls back to the page's own OpenGraph card.
+      const enclosure = post.coverUrl
+        ? `\n      <enclosure url="${escapeXml(post.coverUrl)}" type="image/jpeg" length="0" />`
+        : "";
+
+      return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${base}/writing/${post.slug}</link>
       <guid isPermaLink="true">${base}/writing/${post.slug}</guid>
       <pubDate>${post.publishedAt.toUTCString()}</pubDate>
       <category>${escapeXml(categoryLabels[post.category])}</category>
-      <description>${escapeXml(post.description)}</description>
-    </item>`,
-    )
+      <description>${escapeXml(post.description)}</description>${enclosure}
+    </item>`;
+    })
     .join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

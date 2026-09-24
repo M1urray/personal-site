@@ -3,7 +3,11 @@ import { desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getDb } from "@/db";
 import { posts } from "@/db/schema";
-import { postInputSchema, toColumns } from "@/lib/post-input";
+import {
+  postInputSchema,
+  scheduledForColumn,
+  toColumns,
+} from "@/lib/post-input";
 import { fieldErrorsFromZod } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -93,6 +97,9 @@ export async function POST(req: Request) {
       .insert(posts)
       .values({
         ...columns,
+        ...(columns.status === "published"
+          ? { scheduledFor: null }
+          : scheduledForColumn(parsed.data)),
         publishedAt: columns.status === "published" ? new Date() : null,
       })
       .returning({ id: posts.id, slug: posts.slug });

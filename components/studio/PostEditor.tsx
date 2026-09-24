@@ -16,6 +16,8 @@ export type EditorPost = {
   coverAlt: string;
   status: "draft" | "published";
   featured: boolean;
+  /** `yyyy-mm-dd`, or "" for not queued. */
+  scheduledFor: string;
 };
 
 const EMPTY: EditorPost = {
@@ -29,6 +31,7 @@ const EMPTY: EditorPost = {
   coverAlt: "",
   status: "draft",
   featured: false,
+  scheduledFor: "",
 };
 
 type Tab = "write" | "preview";
@@ -165,11 +168,19 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
       };
 
       if (res.ok && json.ok) {
-        setPost((p) => ({ ...p, status }));
+        // Publishing by hand takes it out of the queue server-side; mirror
+        // that here so the badge doesn't still claim it's scheduled.
+        setPost((p) => ({
+          ...p,
+          status,
+          scheduledFor: status === "published" ? "" : p.scheduledFor,
+        }));
         setNotice(
           status === "published"
             ? "Published — it’s live on the site now."
-            : "Draft saved.",
+            : post.scheduledFor
+              ? `Draft saved — queued for ${post.scheduledFor}.`
+              : "Draft saved.",
         );
         if (!editing && json.post) {
           router.replace(`/studio/${json.post.id}`);
@@ -222,10 +233,18 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
         <div className="editor-status">
           <span
             className={`studio-badge ${
-              post.status === "published" ? "is-live" : "is-draft"
+              post.status === "published"
+                ? "is-live"
+                : post.scheduledFor
+                  ? "is-queued"
+                  : "is-draft"
             }`}
           >
-            {post.status === "published" ? "live" : "draft"}
+            {post.status === "published"
+              ? "live"
+              : post.scheduledFor
+                ? "queued"
+                : "draft"}
           </span>
           {post.slug && (
             <span className="editor-slug">/writing/{post.slug}</span>
@@ -427,6 +446,31 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
               aria-label="Cover image description"
             />
           </div>
+
+          {post.status !== "published" && (
+            <div className="form-row">
+              <label className="field-label" htmlFor="scheduledFor">
+                Publish on{" "}
+                <span className="field-optional">
+                  leave empty to keep it a draft
+                </span>
+              </label>
+              <input
+                id="scheduledFor"
+                type="date"
+                className="field-input"
+                value={post.scheduledFor}
+                onChange={(e) => set("scheduledFor", e.target.value)}
+              />
+              {errors.scheduledFor && (
+                <span className="field-error">{errors.scheduledFor}</span>
+              )}
+              <span className="editor-hint">
+                The scheduler takes it live that morning and it reaches LinkedIn
+                from the feed.
+              </span>
+            </div>
+          )}
 
           <label className="editor-check">
             <input
