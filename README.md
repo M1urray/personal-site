@@ -96,7 +96,28 @@ post_views). Migrations are in [`drizzle/`](drizzle/).
 pnpm db:generate   # generate a migration from schema changes
 pnpm db:push       # push the schema to your Neon database
 pnpm db:seed       # one-off: import any legacy content/posts/*.mdx into the DB
+pnpm series:seed   # load the article series as drafts (see docs/content-plan.md)
 ```
+
+### Local uses its own Neon branch
+
+Production runs on the project's **`main`** branch. Local development points at a
+**`local-dev`** branch instead, so seeding and experiments never touch live data.
+Neon branches are copy-on-write, so this costs almost nothing.
+
+```bash
+# create it once (already done for local-dev)
+npx neonctl branches create --project-id <project> --name local-dev
+
+# connection string for .env.local
+npx neonctl connection-string local-dev --project-id <project> --pooled
+```
+
+`DATABASE_URL` in `.env.local` is the **branch**; `DATABASE_URL` in Vercel is
+**`main`**. Each branch needs its schema pushed once (`pnpm db:push`).
+
+To reset local data, delete the branch and re-create it from `main` — that is
+the cheap way back to a clean database.
 
 ## Writing (the studio)
 
