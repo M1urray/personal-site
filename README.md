@@ -1,8 +1,8 @@
 # robertnjonjo.com
 
-Personal site, CV and technical blog for **Robert Kamau Njonjo** — a software
-engineer specialising in Microsoft Dynamics 365 Business Central integration,
-based in Nairobi, Kenya.
+Personal site, CV and technical blog for **Robert Kamau Njonjo** — a .NET
+software engineer building custom systems and integrating them with Microsoft
+Dynamics 365 Business Central, based in Nairobi, Kenya.
 
 It's a CV, a case-study portfolio and a technical blog on one domain, built to
 turn search traffic and referrals into hiring conversations.

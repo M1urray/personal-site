@@ -15,10 +15,11 @@ export async function HomeWriting() {
       <div className="writing">
         <h3>In progress</h3>
         <p>
-          Working notes on Business Central integration — the specific failures,
-          error messages and design decisions that only show up once a system is
-          in production. Written for the developer who has just pasted an error
-          string into a search bar at 2am.
+          Working notes on building .NET systems and integrating them with
+          Business Central — the failures, trade-offs and design decisions that
+          only show up once software is running for real. Written for the
+          developer who has just pasted an error string into a search bar at
+          2am.
         </p>
         <div className="topics">
           <span className="topic">
@@ -42,9 +43,9 @@ export async function HomeWriting() {
   return (
     <>
       <p className="sec-note home-writing-note">
-        Working notes on Business Central integration — the specific failures,
-        error messages and design decisions that only show up once a system is
-        in production.
+        Working notes on building .NET systems and integrating them with
+        Business Central — the failures, trade-offs and design decisions that
+        only show up once software is running for real.
       </p>
 
       <div className="home-posts">

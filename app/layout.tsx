@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
   keywords: [
+    ".NET developer",
+    "C#",
+    "custom software development",
     "Business Central integration",
     "Dynamics 365 Business Central",
     "AL extensions",

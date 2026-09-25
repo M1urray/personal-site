@@ -1,28 +1,28 @@
 /**
- * Structured CV content, matching the approved copy in the reference. Drives the
- * /cv page and the generated PDF so both stay in step.
+ * Structured CV content. Drives the /cv page, the generated PDF and the
+ * homepage profile, so all three stay in step.
  */
 
 export const summary: string[] = [
-  "Most enterprise software problems aren’t hard because the code is hard. They’re hard because two systems that were never designed to talk to each other have to, and the seam between them is where security, reliability and data integrity all get decided at once.",
-  "That seam is my work. I design and build the integration layers over Microsoft Dynamics 365 Business Central — AL extensions inside the ERP, OData and SOAP services over it, gateway architectures in front of it, and the web portals that expose it safely to people outside the organisation.",
-  "I work across the full stack because integration demands it. The same problem reaches from an AL codeunit through a .NET service and a React front end down to the IIS configuration and the CI pipeline that ships it.",
+  "Most business software isn’t hard because the code is hard. It’s hard because it has to fit how an organisation actually works — its approval chains, its exceptions, and the ERP it already runs on.",
+  "That fit is my work. I build custom systems in .NET — line-of-business applications, APIs and the web portals customers and suppliers log into. Where those systems meet Microsoft Dynamics 365 Business Central, I build the integration layer too: AL extensions inside the ERP, OData and SOAP services over it, gateways in front of it.",
+  "I work across the full stack because the problems do. One feature can run from a C# domain model through an API and a React front end, down to the IIS configuration and the CI pipeline that ships it.",
 ];
 
 export type Skill = { label: string; value: string };
 
 export const skills: Skill[] = [
   {
-    label: "ERP",
-    value:
-      "Dynamics 365 Business Central — AL codeunits, page & table extensions, OData v4, SOAP, API pages",
-  },
-  {
     label: "Backend",
     value:
       "C#, ASP.NET MVC, ASP.NET Core Web API, .NET Framework, Entity Framework, Python",
   },
   { label: "Frontend", value: "React, TypeScript, Angular, JavaScript" },
+  {
+    label: "ERP",
+    value:
+      "Dynamics 365 Business Central — AL codeunits, page & table extensions, OData v4, SOAP, API pages",
+  },
   {
     label: "Architecture",
     value:

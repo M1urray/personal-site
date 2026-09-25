@@ -44,7 +44,7 @@ export async function GET() {
     <title>${escapeXml(`${siteConfig.name} — Writing`)}</title>
     <link>${base}/writing</link>
     <atom:link href="${base}/rss.xml" rel="self" type="application/rss+xml" />
-    <description>${escapeXml("Working notes on Business Central integration.")}</description>
+    <description>${escapeXml("Working notes on .NET systems and Business Central integration.")}</description>
     <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}

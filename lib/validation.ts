@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const PROJECT_TYPES = [
+  { value: "custom-system", label: "Custom .NET system" },
   { value: "bc-integration", label: "Business Central integration" },
   { value: "api-portal", label: "API / portal build" },
   { value: "hiring", label: "Full-time or contract role" },

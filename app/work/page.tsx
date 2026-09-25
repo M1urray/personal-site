@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAllCaseStudies } from "@/lib/work";
 
 const description =
-  "Selected integration work over Microsoft Dynamics 365 Business Central — public-sector ERP, payments and more.";
+  "Selected work — public-sector ERP systems on Business Central, payments platforms and more.";
 
 export const metadata: Metadata = {
   title: "Work",

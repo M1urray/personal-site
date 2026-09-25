@@ -8,6 +8,7 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { HomeWriting } from "@/components/HomeWriting";
 import { contactFormEnabled, newsletterEnabled } from "@/lib/env";
 import { siteConfig } from "@/lib/site";
+import { summary, skills } from "@/lib/resume";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -115,67 +116,19 @@ export default function HomePage() {
           <h2>What I actually do</h2>
         </div>
         <div className="profile-grid">
+          {/* Same copy as the CV summary and skills — one source, no drift. */}
           <div className="profile-body">
-            <p>
-              Most enterprise software problems aren&apos;t hard because the
-              code is hard. They&apos;re hard because two systems that were
-              never designed to talk to each other have to, and the seam between
-              them is where security, reliability and data integrity all get
-              decided at once.
-            </p>
-            <p>
-              That seam is my work. I design and build the integration layers
-              over Microsoft Dynamics 365 Business Central — AL extensions
-              inside the ERP, OData and SOAP services over it, gateway
-              architectures in front of it, and the web portals that expose it
-              safely to people outside the organisation.
-            </p>
-            <p>
-              I work across the full stack because integration demands it. The
-              same problem reaches from an AL codeunit through a .NET service
-              and a React front end down to the IIS configuration and the CI
-              pipeline that ships it.
-            </p>
+            {summary.map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
           </div>
           <div className="spec">
-            <div className="spec-row">
-              <div className="spec-k">ERP</div>
-              <div className="spec-v">
-                Dynamics 365 Business Central — AL codeunits, page &amp; table
-                extensions, OData v4, SOAP, API pages
+            {skills.map((skill) => (
+              <div className="spec-row" key={skill.label}>
+                <div className="spec-k">{skill.label}</div>
+                <div className="spec-v">{skill.value}</div>
               </div>
-            </div>
-            <div className="spec-row">
-              <div className="spec-k">Backend</div>
-              <div className="spec-v">
-                C#, ASP.NET MVC, ASP.NET Core Web API, .NET Framework, Entity
-                Framework, Python
-              </div>
-            </div>
-            <div className="spec-row">
-              <div className="spec-k">Frontend</div>
-              <div className="spec-v">
-                React, TypeScript, Angular, JavaScript
-              </div>
-            </div>
-            <div className="spec-row">
-              <div className="spec-k">Architecture</div>
-              <div className="spec-v">
-                API gateways, OAuth 2.0 / OIDC, role-based access control,
-                circuit breakers, response caching
-              </div>
-            </div>
-            <div className="spec-row">
-              <div className="spec-k">Infra</div>
-              <div className="spec-v">
-                Jenkins CI/CD, IIS (ARR, URL Rewrite, SSL), Windows Server,
-                WinRM, Docker, Linux
-              </div>
-            </div>
-            <div className="spec-row">
-              <div className="spec-k">Data</div>
-              <div className="spec-v">SQL Server, PostgreSQL</div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -184,10 +137,10 @@ export default function HomePage() {
       <section id="experience">
         <div className="sec-head">
           <div className="eyebrow">/experience</div>
-          <h2>Four years, one specialism</h2>
+          <h2>Four years in production</h2>
           <p className="sec-note">
-            Every role since 2022 has come back to the same problem — getting
-            enterprise systems to exchange data they were never built to share.
+            Every role since 2022 has meant shipping .NET software that real
+            organisations run on — often alongside an ERP, always live.
           </p>
         </div>
 
@@ -406,7 +359,7 @@ export default function HomePage() {
       <section id="writing">
         <div className="sec-head">
           <div className="eyebrow">/writing</div>
-          <h2>Notes from the seam</h2>
+          <h2>Notes from production</h2>
         </div>
         <HomeWriting />
         <NewsletterSignup enabled={newsletterEnabled()} />
@@ -416,11 +369,11 @@ export default function HomePage() {
       <section id="contact">
         <div className="sec-head">
           <div className="eyebrow">/contact</div>
-          <h2>Available for integration work</h2>
+          <h2>Available for .NET and integration work</h2>
           <p className="sec-note">
-            Open to senior engineering and technical lead roles, and to Business
-            Central integration projects — including subcontract work for
-            implementation partners.
+            Open to senior .NET engineering and technical lead roles, to custom
+            system builds, and to Business Central integration projects —
+            including subcontract work for implementation partners.
           </p>
         </div>
         <div className="contact-grid">

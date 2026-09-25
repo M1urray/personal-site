@@ -63,7 +63,7 @@ export function NewsletterSignup({ enabled }: { enabled: boolean }) {
       <div className="subscribe-copy">
         <h3>Get the notes</h3>
         <p>
-          New posts on Business Central integration, sent only when there’s
+          New posts on .NET and Business Central, sent only when there’s
           something worth reading. Double opt-in, unsubscribe in one click.
         </p>
       </div>

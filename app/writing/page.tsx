@@ -12,7 +12,7 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { newsletterEnabled } from "@/lib/env";
 
 const description =
-  "Working notes on Business Central integration — the specific failures, error messages and design decisions that only show up once a system is in production.";
+  "Working notes on building .NET systems and integrating them with Business Central — the failures, trade-offs and design decisions that only show up once software is running for real.";
 
 export const metadata: Metadata = {
   title: "Writing",
@@ -54,7 +54,7 @@ export default async function WritingPage() {
     <div className="page">
       <div className="sec-head">
         <div className="eyebrow">/writing</div>
-        <h1>Notes from the seam</h1>
+        <h1>Notes from production</h1>
         <p className="sec-note">{description}</p>
       </div>
 

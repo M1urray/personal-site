@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/site";
 import { summary, skills, roles } from "@/lib/resume";
 
 const description =
-  "Full CV for Robert Kamau Njonjo — Business Central integration engineer, Nairobi. Four years building APIs, gateways and portals over Microsoft Dynamics 365 Business Central.";
+  "Full CV for Robert Kamau Njonjo — .NET software engineer, Nairobi. Four years building custom systems, APIs and portals in C# and ASP.NET Core, many of them over Microsoft Dynamics 365 Business Central.";
 
 export const metadata: Metadata = {
   title: "CV",
