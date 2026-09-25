@@ -9,6 +9,7 @@ import {
   Text,
 } from "@react-email/components";
 import type { ReactNode } from "react";
+import { siteConfig } from "@/lib/site";
 
 const main = {
   backgroundColor: "#f3f5f7",
@@ -69,8 +70,7 @@ export function EmailLayout({
             {children}
             <Hr style={hr} />
             <Text style={footer}>
-              Robert Kamau Njonjo · Business Central Integration Engineer ·
-              Nairobi, Kenya
+              {siteConfig.name} · {siteConfig.role} · {siteConfig.location}
             </Text>
           </Section>
         </Container>

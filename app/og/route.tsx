@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 
@@ -18,7 +19,7 @@ export function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const title = (
     searchParams.get("title") ??
-    "I connect Microsoft Dynamics 365 Business Central to everything else."
+    "I build custom systems in .NET — and connect them to everything else."
   ).slice(0, 140);
   const eyebrow = (searchParams.get("eyebrow") ?? "robertnjonjo.com")
     .slice(0, 40)
@@ -111,7 +112,7 @@ export function GET(req: Request) {
               display: "flex",
             }}
           />
-          Robert Kamau Njonjo — Business Central Integration Engineer
+          {siteConfig.name} — {siteConfig.role}
         </div>
       </div>
     </div>,

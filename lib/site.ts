@@ -5,10 +5,10 @@
 export const siteConfig = {
   name: "Robert Kamau Njonjo",
   shortName: "R. Njonjo",
-  role: "Business Central Integration Engineer",
+  role: ".NET Software Engineer",
   location: "Nairobi, Kenya",
   description:
-    "Software engineer specialising in Microsoft Dynamics 365 Business Central integration. AL extensions, OData and SOAP layers, gateway architectures and ERP-connected portals for government and enterprise.",
+    "Software engineer building custom systems in .NET — ASP.NET Core APIs, web portals and line-of-business applications — and integrating them with Microsoft Dynamics 365 Business Central.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
     /\/$/,
     "",

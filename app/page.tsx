@@ -31,6 +31,9 @@ const personLd = {
   },
   sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
   knowsAbout: [
+    "C#",
+    ".NET",
+    "Custom software development",
     "Microsoft Dynamics 365 Business Central",
     "AL language",
     "OData",
@@ -59,13 +62,14 @@ export default function HomePage() {
               Robert Kamau<span className="l2">Njonjo</span>
             </h1>
             <p className="lede">
-              I connect <em>Microsoft Dynamics&nbsp;365 Business Central</em> to
+              I build custom systems in <em>.NET</em> — and connect them to
               everything else.
             </p>
             <p className="sub">
-              Four years building the APIs, gateways and portals that let
-              organisations actually use the data locked inside their ERP — for
-              government, public sector and enterprise clients across Kenya.
+              Four years of C# and ASP.NET Core — line-of-business applications,
+              APIs, gateways and web portals, many of them built over Microsoft
+              Dynamics&nbsp;365 Business Central. For government, public sector
+              and enterprise clients across Kenya.
             </p>
             <div className="cta-row">
               <Link className="btn btn-solid" href="/work">
