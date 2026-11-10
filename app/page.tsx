@@ -7,7 +7,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { HomeWriting } from "@/components/HomeWriting";
 import { contactFormEnabled, newsletterEnabled } from "@/lib/env";
-import { siteConfig } from "@/lib/site";
+import { schemaIds, siteConfig } from "@/lib/site";
 import { summary, skills } from "@/lib/resume";
 
 export const metadata: Metadata = {
@@ -17,39 +17,74 @@ export const metadata: Metadata = {
 /** Refreshed on demand when a post is published; hourly otherwise. */
 export const revalidate = 3600;
 
-const personLd = {
+/**
+ * Who this site is about, in the form search engines read.
+ *
+ * One graph rather than three blocks: the WebSite and ProfilePage both point
+ * back at the Person by @id. alternateName is what ties "Robert Njonjo" to
+ * "Robert Kamau Njonjo", and the WebSite name is what Google can show as the
+ * site's name in results.
+ */
+const profileLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: siteConfig.name,
-  jobTitle: siteConfig.role,
-  url: siteConfig.url,
-  email: `mailto:${siteConfig.email}`,
-  telephone: `+${siteConfig.phone.replace(/\D/g, "")}`,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Nairobi",
-    addressCountry: "KE",
-  },
-  sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
-  knowsAbout: [
-    "C#",
-    ".NET",
-    "Custom software development",
-    "Microsoft Dynamics 365 Business Central",
-    "AL language",
-    "OData",
-    "SOAP",
-    "ASP.NET Core",
-    "API gateway architecture",
-    "OAuth 2.0 / OIDC",
-    "ERP integration",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": schemaIds.person,
+      name: siteConfig.name,
+      alternateName: siteConfig.alternateNames,
+      givenName: "Robert",
+      additionalName: "Kamau",
+      familyName: "Njonjo",
+      description: siteConfig.description,
+      jobTitle: siteConfig.role,
+      url: siteConfig.url,
+      image: `${siteConfig.url}/portrait.jpg`,
+      email: `mailto:${siteConfig.email}`,
+      telephone: `+${siteConfig.phone.replace(/\D/g, "")}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Nairobi",
+        addressCountry: "KE",
+      },
+      sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
+      knowsAbout: [
+        "C#",
+        ".NET",
+        "Custom software development",
+        "Microsoft Dynamics 365 Business Central",
+        "AL language",
+        "OData",
+        "SOAP",
+        "ASP.NET Core",
+        "API gateway architecture",
+        "OAuth 2.0 / OIDC",
+        "ERP integration",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": schemaIds.website,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      alternateName: siteConfig.alternateNames,
+      inLanguage: "en",
+      publisher: { "@id": schemaIds.person },
+    },
+    {
+      "@type": "ProfilePage",
+      url: siteConfig.url,
+      name: `${siteConfig.name} — ${siteConfig.role}`,
+      isPartOf: { "@id": schemaIds.website },
+      mainEntity: { "@id": schemaIds.person },
+    },
   ],
 };
 
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={personLd} />
+      <JsonLd data={profileLd} />
 
       {/* ============ HERO ============ */}
       <header className="hero">

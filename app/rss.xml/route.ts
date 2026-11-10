@@ -28,10 +28,14 @@ export async function GET() {
       const type = post.coverUrl ? "image/jpeg" : "image/png";
       const enclosure = `\n      <enclosure url="${escapeXml(image)}" type="${type}" length="0" />`;
 
+      // The guid is deliberately not the permalink. Readers and Zapier use it to
+      // decide whether an item is new, and a permalink changes whenever the
+      // domain does — which would make every old post look new and re-share the
+      // whole archive to LinkedIn. The row id never changes.
       return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${base}/writing/${post.slug}</link>
-      <guid isPermaLink="true">${base}/writing/${post.slug}</guid>
+      <guid isPermaLink="false">post-${post.id}</guid>
       <pubDate>${post.publishedAt.toUTCString()}</pubDate>
       <category>${escapeXml(categoryLabels[post.category])}</category>
       <description>${escapeXml(post.description)}</description>${enclosure}

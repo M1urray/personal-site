@@ -13,7 +13,7 @@ import {
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { JsonLd } from "@/components/JsonLd";
 import { ViewCounter } from "@/components/ViewCounter";
-import { siteConfig } from "@/lib/site";
+import { schemaIds, siteConfig } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -71,8 +71,15 @@ export default async function PostPage({ params }: Params) {
     description: post.description,
     datePublished: post.publishedAt.toISOString(),
     dateModified: post.updatedAt.toISOString(),
-    author: { "@type": "Person", name: siteConfig.name, url: siteConfig.url },
-    publisher: { "@type": "Person", name: siteConfig.name },
+    // Same @id as the homepage's Person, so every article counts toward the
+    // one author rather than reading as an unnamed byline.
+    author: {
+      "@type": "Person",
+      "@id": schemaIds.person,
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    publisher: { "@id": schemaIds.person },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteConfig.url}/writing/${post.slug}`,

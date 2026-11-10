@@ -5,10 +5,16 @@
 export const siteConfig = {
   name: "Robert Kamau Njonjo",
   shortName: "R. Njonjo",
+  /**
+   * Other ways people write the name when searching. Fed to search engines as
+   * schema.org alternateName so "Robert Njonjo" resolves to the same person as
+   * "Robert Kamau Njonjo".
+   */
+  alternateNames: ["Robert Njonjo", "Robert K. Njonjo"],
   role: ".NET Software Engineer",
   location: "Nairobi, Kenya",
   description:
-    "Software engineer building custom systems in .NET — ASP.NET Core APIs, web portals and line-of-business applications — and integrating them with Microsoft Dynamics 365 Business Central.",
+    "Robert Kamau Njonjo (Robert Njonjo) is a .NET software engineer in Nairobi, Kenya, building custom C# systems and integrating them with Dynamics 365 Business Central.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
     /\/$/,
     "",
@@ -25,6 +31,16 @@ export const siteConfig = {
 } as const;
 
 export type SiteConfig = typeof siteConfig;
+
+/**
+ * Stable schema.org identifiers. Pages that mention the author point at the
+ * same @id, which is how a search engine learns the articles, the CV and the
+ * homepage are all about one person.
+ */
+export const schemaIds = {
+  person: `${siteConfig.url}/#person`,
+  website: `${siteConfig.url}/#website`,
+} as const;
 
 /** Primary navigation — shared by the header and mobile menu. */
 export const navLinks = [
