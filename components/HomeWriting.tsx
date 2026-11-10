@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPublishedPosts, categoryLabels, formatDate } from "@/lib/blog";
+import {
+  getPublishedPosts,
+  categoryLabels,
+  formatDate,
+  shareImagePath,
+} from "@/lib/blog";
 
 /**
  * The homepage writing teaser. Shows the latest posts once any are published;
@@ -55,17 +60,17 @@ export async function HomeWriting() {
             href={`/writing/${post.slug}`}
             className="home-post"
           >
-            {post.coverUrl && (
-              <div className="home-post-media">
-                <Image
-                  src={post.coverUrl}
-                  alt={post.coverAlt ?? ""}
-                  fill
-                  sizes="(max-width: 720px) 100vw, 380px"
-                  className="post-card-img"
-                />
-              </div>
-            )}
+            <div className="home-post-media">
+              <Image
+                src={shareImagePath(post)}
+                alt={post.coverUrl ? (post.coverAlt ?? "") : ""}
+                fill
+                sizes="(max-width: 720px) 100vw, 380px"
+                className="post-card-img"
+                data-card={post.coverUrl ? undefined : "generated"}
+                unoptimized={!post.coverUrl}
+              />
+            </div>
             <div className="post-meta">
               <span className="post-cat">{categoryLabels[post.category]}</span>
               <span>{formatDate(post.publishedAt)}</span>

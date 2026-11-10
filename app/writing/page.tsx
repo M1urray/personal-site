@@ -5,6 +5,7 @@ import {
   getPublishedPosts,
   categoryLabels,
   formatDate,
+  shareImagePath,
   type BlogPost,
 } from "@/lib/blog";
 import { PostFilter, type PostListItem } from "@/components/PostFilter";
@@ -40,8 +41,10 @@ function toListItem(post: BlogPost): PostListItem {
     category: post.category,
     categoryLabel: categoryLabels[post.category],
     readingTime: post.readingTime,
-    coverUrl: post.coverUrl,
-    coverAlt: post.coverAlt,
+    coverUrl: shareImagePath(post),
+    // A generated card repeats the title printed beside it, so it's
+    // decorative; only an uploaded cover has something of its own to say.
+    coverAlt: post.coverUrl ? post.coverAlt : "",
   };
 }
 
@@ -66,18 +69,18 @@ export default async function WritingPage() {
         <>
           {featured && (
             <Link href={`/writing/${featured.slug}`} className="lead">
-              {featured.coverUrl && (
-                <div className="lead-media">
-                  <Image
-                    src={featured.coverUrl}
-                    alt={featured.coverAlt ?? ""}
-                    fill
-                    sizes="(max-width: 860px) 100vw, 1180px"
-                    className="lead-img"
-                    priority
-                  />
-                </div>
-              )}
+              <div className="lead-media">
+                <Image
+                  src={shareImagePath(featured)}
+                  alt={featured.coverUrl ? (featured.coverAlt ?? "") : ""}
+                  fill
+                  sizes="(max-width: 860px) 100vw, 1180px"
+                  className="lead-img"
+                  data-card={featured.coverUrl ? undefined : "generated"}
+                  unoptimized={!featured.coverUrl}
+                  priority
+                />
+              </div>
               <div className="lead-copy">
                 <div className="post-meta">
                   <span className="post-cat">

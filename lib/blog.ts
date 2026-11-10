@@ -28,6 +28,17 @@ export type BlogPost = {
   readingTime: number;
 };
 
+/**
+ * The image a post is shared and listed with: its uploaded cover if it has
+ * one, otherwise its generated card (title plus the code it's about).
+ */
+export function shareImagePath(post: {
+  slug: string;
+  coverUrl: string | null;
+}) {
+  return post.coverUrl ?? `/og/post/${post.slug}`;
+}
+
 /** Words per minute used for the read-time estimate. */
 const WPM = 200;
 

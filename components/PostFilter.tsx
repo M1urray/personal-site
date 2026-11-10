@@ -16,6 +16,9 @@ export type PostListItem = {
   coverAlt?: string | null;
 };
 
+/** A generated share card rather than an uploaded cover. */
+const isCard = (src: string) => src.startsWith("/og/");
+
 const FILTERS = [
   { key: "all", label: "All" },
   { key: "business-central", label: "Business Central" },
@@ -74,7 +77,11 @@ export function PostFilter({ posts }: { posts: PostListItem[] }) {
                     alt={post.coverAlt ?? ""}
                     fill
                     sizes="(max-width: 720px) 100vw, 560px"
+                    // Generated cards are already small PNGs sized for this;
+                    // re-optimizing them just spends image-optimizer quota.
                     className="post-card-img"
+                    data-card={isCard(post.coverUrl) ? "generated" : undefined}
+                    unoptimized={isCard(post.coverUrl)}
                   />
                 ) : (
                   <span className="post-card-ph" aria-hidden="true">

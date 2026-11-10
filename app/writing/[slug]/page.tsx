@@ -8,6 +8,7 @@ import {
   getRelatedPosts,
   categoryLabels,
   formatDate,
+  shareImagePath,
 } from "@/lib/blog";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { JsonLd } from "@/components/JsonLd";
@@ -31,9 +32,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!post) return {};
 
   const url = `/writing/${post.slug}`;
-  const ogImage =
-    post.coverUrl ??
-    `/og?title=${encodeURIComponent(post.title)}&eyebrow=${post.category}`;
+  const ogImage = shareImagePath(post);
 
   return {
     title: post.title,
@@ -81,7 +80,7 @@ export default async function PostPage({ params }: Params) {
     url: `${siteConfig.url}/writing/${post.slug}`,
     articleSection: categoryLabels[post.category],
     inLanguage: "en",
-    ...(post.coverUrl ? { image: post.coverUrl } : {}),
+    image: new URL(shareImagePath(post), siteConfig.url).toString(),
   };
 
   return (

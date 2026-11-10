@@ -48,6 +48,8 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadsEnabled, setUploadsEnabled] = useState(true);
+  // Bumped after each save so the share-card preview re-renders.
+  const [cardVersion, setCardVersion] = useState(0);
   // Only auto-derive the slug until the author edits it or the post exists.
   const slugTouched = useRef(Boolean(initial?.slug));
   const bodyRef = useRef<HTMLTextAreaElement>(null);
@@ -182,6 +184,7 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
               ? `Draft saved — queued for ${post.scheduledFor}.`
               : "Draft saved.",
         );
+        setCardVersion((v) => v + 1);
         if (!editing && json.post) {
           router.replace(`/studio/${json.post.id}`);
         }
@@ -446,6 +449,27 @@ export function PostEditor({ initial }: { initial?: Partial<EditorPost> }) {
               aria-label="Cover image description"
             />
           </div>
+
+          {post.id !== null && !post.coverUrl && (
+            <div className="form-row">
+              <span className="field-label">
+                Share card{" "}
+                <span className="field-optional">
+                  what LinkedIn shows · as of the last save
+                </span>
+              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="editor-cover"
+                src={`/api/studio/og/${post.id}?v=${cardVersion}`}
+                alt="Share card preview"
+              />
+              <span className="editor-hint">
+                Shows the last C# block. To feature a different one, tag its
+                fence: ```csharp card
+              </span>
+            </div>
+          )}
 
           {post.status !== "published" && (
             <div className="form-row">

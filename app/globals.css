@@ -1087,6 +1087,20 @@ footer {
   object-fit: cover;
   filter: saturate(0.85) contrast(1.04);
 }
+/* A generated card has text at every edge, and a 21:9 crop would cut its top
+   and bottom rows. Its background is exactly --ink, so letterboxing is
+   seamless. (16:9 boxes only trim the sides, inside the card's padding.)
+   Marked with data-card rather than a class: the Tailwind Prettier plugin
+   trims the leading space off a conditional class and fuses the names. */
+.lead-img[data-card] {
+  object-fit: contain;
+}
+/* The cards are drawn in the palette already; the photo filter would only
+   dull the syntax colours. */
+.lead-img[data-card],
+.post-card-img[data-card] {
+  filter: none;
+}
 .lead-copy {
   padding: clamp(22px, 4vw, 34px);
 }

@@ -1,19 +1,16 @@
 import { ImageResponse } from "next/og";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { siteConfig } from "@/lib/site";
+import {
+  CARD_SIZE,
+  INK,
+  OK,
+  PAPER,
+  SIGNAL,
+  STEEL,
+  cardFonts,
+} from "@/app/og/theme";
 
 export const runtime = "nodejs";
-
-const fontsDir = join(process.cwd(), "app", "og", "fonts");
-const archivo = readFileSync(join(fontsDir, "Archivo-Bold.ttf"));
-const plexMono = readFileSync(join(fontsDir, "IBMPlexMono-Regular.ttf"));
-
-const INK = "#0A1017";
-const PAPER = "#E8EEF3";
-const STEEL = "#6B8299";
-const SIGNAL = "#F0A63C";
-const OK = "#4FB89A";
 
 export function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -116,13 +113,6 @@ export function GET(req: Request) {
         </div>
       </div>
     </div>,
-    {
-      width: 1200,
-      height: 630,
-      fonts: [
-        { name: "Archivo", data: archivo, weight: 800, style: "normal" },
-        { name: "IBM Plex Mono", data: plexMono, weight: 400, style: "normal" },
-      ],
-    },
+    { ...CARD_SIZE, fonts: cardFonts },
   );
 }

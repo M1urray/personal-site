@@ -1,4 +1,4 @@
-import { getPublishedPosts, categoryLabels } from "@/lib/blog";
+import { getPublishedPosts, categoryLabels, shareImagePath } from "@/lib/blog";
 import { siteConfig } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -21,11 +21,12 @@ export async function GET() {
 
   const items = posts
     .map((post) => {
-      // Zapier reads the enclosure to attach an image to the LinkedIn share;
-      // without a cover it falls back to the page's own OpenGraph card.
-      const enclosure = post.coverUrl
-        ? `\n      <enclosure url="${escapeXml(post.coverUrl)}" type="image/jpeg" length="0" />`
-        : "";
+      // Every item carries an image — the uploaded cover, or the generated
+      // card — so the Zap can attach it to the LinkedIn share. LinkedIn's API
+      // won't scrape one from the link by itself.
+      const image = new URL(shareImagePath(post), base).toString();
+      const type = post.coverUrl ? "image/jpeg" : "image/png";
+      const enclosure = `\n      <enclosure url="${escapeXml(image)}" type="${type}" length="0" />`;
 
       return `    <item>
       <title>${escapeXml(post.title)}</title>
