@@ -75,7 +75,7 @@ doc
   .fontSize(9)
   .fillColor(STEEL)
   .text(
-    `${siteConfig.email}    ${siteConfig.phoneDisplay}    ${siteConfig.links.linkedinHandle}    ${siteConfig.links.githubHandle}`,
+    `${siteConfig.email}    ${siteConfig.links.linkedinHandle}    ${siteConfig.links.githubHandle}`,
   );
 doc.moveDown(0.7);
 hr(AMBER_RULE, 2);

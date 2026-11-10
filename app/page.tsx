@@ -41,7 +41,6 @@ const profileLd = {
       url: siteConfig.url,
       image: `${siteConfig.url}/portrait.jpg`,
       email: `mailto:${siteConfig.email}`,
-      telephone: `+${siteConfig.phone.replace(/\D/g, "")}`,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Nairobi",
@@ -412,16 +411,9 @@ export default function HomePage() {
           </p>
         </div>
         <div className="contact-grid">
-          <a className="ct" href={`mailto:${siteConfig.email}`}>
+          <a className="ct ct-wide" href={`mailto:${siteConfig.email}`}>
             <div className="ct-k">Email</div>
             <div className="ct-v">{siteConfig.email}</div>
-          </a>
-          <a
-            className="ct"
-            href={`tel:+${siteConfig.phone.replace(/\D/g, "")}`}
-          >
-            <div className="ct-k">Phone</div>
-            <div className="ct-v">{siteConfig.phoneDisplay}</div>
           </a>
           <a
             className="ct"

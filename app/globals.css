@@ -944,6 +944,11 @@ h2 {
 .ct:hover {
   background: var(--ink-2);
 }
+/* Three tiles in a two-column grid would leave one cell empty, and the grid's
+   background is the rule colour, so the gap would show as a solid block. */
+.ct-wide {
+  grid-column: 1 / -1;
+}
 .ct-k {
   font-family: var(--font-mono);
   font-size: 10.5px;

@@ -20,8 +20,9 @@ export const siteConfig = {
     "",
   ),
   email: "rknjonjo@gmail.com",
-  phone: "+254745310513",
-  phoneDisplay: "+254 745 310 513",
+  // No phone number, deliberately: it is scraped from public pages and, if it
+  // is also an M-Pesa line, invites SIM-swap and impersonation scams. People
+  // reach Robert by email or the contact form, and get a number once they reply.
   links: {
     linkedin: "https://www.linkedin.com/in/robert-njonjo/",
     linkedinHandle: "in/robert-njonjo",

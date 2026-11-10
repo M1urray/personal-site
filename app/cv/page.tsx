@@ -27,9 +27,6 @@ export default function CvPage() {
         </p>
         <div className="cv-contacts">
           <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-          <a href={`tel:+${siteConfig.phone.replace(/\D/g, "")}`}>
-            {siteConfig.phoneDisplay}
-          </a>
           <a href={siteConfig.links.linkedin} target="_blank" rel="noopener">
             {siteConfig.links.linkedinHandle}
           </a>
